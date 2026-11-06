@@ -620,3 +620,13 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
     line-height: 1.55;
   }
 }
+
+/* One shared compact phone header across every site page. */
+@media (max-width: 639px) {
+  :root { --sa-header-h: 64px; }
+  .sa-header__bar { height: 64px; padding-inline: 16px; }
+  .sa-brand img { height: 27px; }
+  .sa-brand span { font-size: 1.05rem; }
+  .sa-burger { width: 40px; height: 40px; }
+  main#main:not(.sp-main) { padding-top: 64px; }
+}
