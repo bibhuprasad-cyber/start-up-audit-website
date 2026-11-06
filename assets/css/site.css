@@ -426,6 +426,38 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
 .sa-hscroll::-webkit-scrollbar-track{background:#d9dcdd}
 .sa-hscroll:focus-visible{outline:2px solid #008080;outline-offset:4px}
 
+/* Homepage hero: compact phone layout only. Tablet and desktop retain the existing design. */
+@media (max-width: 639px) {
+  #home-hero > .relative { min-height: 0; }
+  #home-hero > .relative > .relative.z-20 { padding-top: 36px; padding-bottom: 30px; }
+  #home-hero .max-w-2xl.space-y-space-md > :not(:last-child) { margin-block-end: 14px; }
+  #home-hero h1 { font-size: clamp(28px, 8vw, 32px); line-height: 1.08; }
+  #home-hero p.text-body-lg { font-size: 16px; line-height: 1.48; }
+  #home-hero > .relative > .absolute.inset-0.z-10 {
+    background: linear-gradient(90deg, rgba(41,49,51,.92) 0%, rgba(41,49,51,.82) 58%, rgba(41,49,51,.68) 100%),
+                linear-gradient(0deg, rgba(41,49,51,.86) 0%, transparent 48%);
+  }
+  #home-hero .pt-space-md {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: stretch;
+    gap: 10px;
+    padding-top: 0;
+  }
+  #home-hero .pt-space-md > a {
+    min-width: 0;
+    min-height: 48px;
+    justify-content: center;
+    padding: 10px 8px;
+    font-size: 10px;
+    line-height: 1.2;
+    letter-spacing: .06em;
+    white-space: nowrap;
+  }
+  #home-hero .pt-space-md > div.w-full { grid-column: 1 / -1; padding-top: 0; }
+  #home-hero .pt-space-md > div.w-full .font-label-sm { font-size: 10px; }
+}
+
 /* ===== About · Founder profile — phone only (<640px). Desktop/tablet untouched. ===== */
 @media (max-width: 639px) {
   .sa-founder > div { padding-top: 20px; padding-bottom: 32px; }
