@@ -532,3 +532,63 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
   .sa-founder .divide-y span.font-bold { min-width: 0; font-size: 11px; }
   .sa-founder .divide-y p { font-size: 13px; line-height: 1.45; }
 }
+
+/* Consistent phone typography and section rhythm for the homepage only. */
+@media (max-width: 639px) {
+  body[data-page="home"] main#main > div > section:not(#home-hero):not(#services) {
+    padding-block: 48px;
+  }
+  body[data-page="home"] #process > div,
+  body[data-page="home"] #case-studies > div,
+  body[data-page="home"] main#main > div > section:not(#home-hero):not(#services) > div {
+    padding-inline: 16px;
+  }
+
+  /* Keep section headings, body copy, and gaps on a steady phone scale. */
+  body[data-page="home"] #process h2,
+  body[data-page="home"] #case-studies h2,
+  body[data-page="home"] main#main > div > section:not(#home-hero):not(#services) h2 {
+    font-size: 27px;
+    line-height: 1.18;
+  }
+  body[data-page="home"] #process > div > div:first-child { margin-bottom: 26px; }
+  body[data-page="home"] #process > div > div:first-child h2 { margin-bottom: 10px; }
+  body[data-page="home"] #process > div > div:first-child p,
+  body[data-page="home"] #case-studies p,
+  body[data-page="home"] main#main > div > section:not(#home-hero):not(#services) > div > div > p {
+    font-size: 15px;
+    line-height: 1.55;
+  }
+
+  /* Process steps remain swipeable, with a readable card width and type. */
+  body[data-page="home"] #process .sa-hscroll { margin-top: 24px; gap: 14px; padding-bottom: 16px; }
+  body[data-page="home"] #process .sa-hscroll > div { width: 84%; }
+  body[data-page="home"] #process .sa-hscroll > div > div:first-child { margin-bottom: 14px; }
+  body[data-page="home"] #process .sa-hscroll > div > div:first-child > div:first-child { width: 48px; height: 48px; font-size: 18px; }
+  body[data-page="home"] #process h4 { font-size: 19px; line-height: 1.25; margin-bottom: 8px; }
+  body[data-page="home"] #process .sa-hscroll p { font-size: 14px; line-height: 1.55; }
+
+  /* Case study cards use the same body size and tighter editorial spacing. */
+  body[data-page="home"] #case-studies > div > div:first-child { margin-bottom: 24px; padding-bottom: 18px; gap: 10px; }
+  body[data-page="home"] #case-studies > div > div:first-child > div > span { font-size: 10px; }
+  body[data-page="home"] #case-studies > div > div:first-child > a { margin-top: 2px; min-height: 40px; font-size: 10px; }
+  body[data-page="home"] #case-studies [data-img-reveal] { aspect-ratio: 16 / 9; min-height: 0; height: auto; }
+  body[data-page="home"] #case-studies [data-img-reveal] img { width: 100%; height: 100%; object-fit: cover; }
+  body[data-page="home"] #case-studies [class*="p-space-lg"] { padding: 16px; }
+  body[data-page="home"] #case-studies h3 { font-size: 20px; line-height: 1.25; margin-bottom: 8px; }
+  body[data-page="home"] #case-studies p { font-size: 14px; line-height: 1.55; margin-bottom: 14px; }
+  body[data-page="home"] #case-studies .font-label-sm { font-size: 9px; line-height: 1.45; }
+  body[data-page="home"] #case-studies .font-label-md { font-size: 10px; }
+  body[data-page="home"] #case-studies [data-stagger] { gap: 16px; }
+
+  /* Closing call-to-action: keep its text and buttons compact but comfortable. */
+  body[data-page="home"] main#main > div > section:not(#home-hero):not(#services):not(#process):not(#case-studies) h2 { margin: 0 0 14px; }
+  body[data-page="home"] main#main > div > section:not(#home-hero):not(#services):not(#process):not(#case-studies) p { margin-bottom: 20px; }
+  body[data-page="home"] main#main > div > section:not(#home-hero):not(#services):not(#process):not(#case-studies) > div > div > div:last-child { gap: 12px; }
+  body[data-page="home"] main#main > div > section:not(#home-hero):not(#services):not(#process):not(#case-studies) > div > div > div:last-child > a {
+    min-height: 46px;
+    justify-content: center;
+    padding: 12px 16px;
+    font-size: 11px;
+  }
+}
