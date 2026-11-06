@@ -509,13 +509,14 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
 
 /* ===== About · Founder profile — phone only (<640px). Desktop/tablet untouched. ===== */
 @media (max-width: 639px) {
-  .sa-founder > div { padding-top: 20px; padding-bottom: 32px; }
-  .sa-founder > div > div:first-child { margin-bottom: 20px; padding-bottom: 12px; row-gap: 6px; }
+  .sa-founder > div { padding-top: 20px; padding-bottom: 18px; }
+  .sa-founder > div > div:first-child { align-items: flex-start; flex-direction: column; margin-bottom: 16px; padding-bottom: 10px; row-gap: 6px; }
+  .sa-founder > div > div:first-child > div:first-child { flex-wrap: nowrap; }
   .sa-founder > div > div:first-child .font-mono { font-size: 10px; letter-spacing: .04em; }
   /* grid -> flowing block so text wraps around the floated portrait */
   .sa-founder .grid.grid-cols-12 { display: flow-root; }
   .sa-founder .grid.grid-cols-12 > div:has([data-portrait]) {
-    float: left; width: 112px; margin: 2px 14px 6px 0;
+    float: left; width: min(142px, 40%); margin: 2px 14px 6px 0;
   }
   .sa-founder [data-portrait] { aspect-ratio: 4 / 5; }
   .sa-founder .grid.grid-cols-12 > div:last-child, .sa-founder .grid.grid-cols-12 > div:has([data-portrait]) > div { padding: 4px; }
@@ -531,6 +532,11 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
   .sa-founder .divide-y > div { padding: 10px 14px; gap: 4px; }
   .sa-founder .divide-y span.font-bold { min-width: 0; font-size: 11px; }
   .sa-founder .divide-y p { font-size: 13px; line-height: 1.45; }
+
+  /* Bring the team cards closer to the founder profile without changing their size. */
+  .sa-team-section > div { padding-top: 24px; padding-bottom: 40px; }
+  .sa-team-section > div > div:first-child { margin-bottom: 24px; padding-bottom: 12px; }
+  .sa-team-grid { scroll-behavior: smooth; }
 }
 
 /* Consistent phone typography and section rhythm for the homepage only. */
