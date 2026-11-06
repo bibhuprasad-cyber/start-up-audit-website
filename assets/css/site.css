@@ -636,3 +636,36 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
   .sa-burger { width: 40px; height: 40px; }
   main#main:not(.sp-main) { padding-top: 64px; }
 }
+
+/* Case studies: tighten spacing inside each story, while separating the stories. */
+@media (max-width: 639px) {
+  .sa-case-intro > div {
+    padding-top: 32px;
+    padding-bottom: 24px;
+  }
+  .sa-case-intro .grid {
+    row-gap: 16px;
+  }
+  .sa-case-intro .bg-surface-container-low {
+    padding: 14px;
+  }
+  .sa-case-list > div { padding-inline: 16px; }
+  .sa-case-list article {
+    margin: 0 0 30px;
+    padding-block: 0;
+  }
+  .sa-case-list article:last-child { margin-bottom: 0; }
+  .sa-case-list article > .grid {
+    column-gap: 0;
+    row-gap: 10px;
+  }
+  .sa-case-list article .relative.overflow-hidden + div {
+    margin-top: 6px;
+    gap: 8px;
+  }
+  body[data-page="case-studies"] .sa-case-list article h2 { margin-bottom: 8px; }
+  .sa-case-list article p { margin-bottom: 10px; }
+  .sa-case-list article .flex.flex-wrap { gap: 6px; margin-bottom: 12px; }
+  .sa-case-list article .pt-space-xs { padding-top: 0; }
+  .sa-case-list article .pt-space-sm { padding-top: 6px; }
+}
