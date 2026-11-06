@@ -19,6 +19,7 @@
     initYear();
     initHeader();
     initMobileMenu();
+    initTeamCarousel();
     initEnquiryForm();
     initMotion();
     initMotionNote();
@@ -28,6 +29,58 @@
   function initYear() {
     var y = String(new Date().getFullYear());
     [].forEach.call(doc.querySelectorAll('[data-year]'), function (n) { n.textContent = y; });
+  }
+
+  /* ---------- gently advance the About team cards on phones ---------- */
+  function initTeamCarousel() {
+    var track = doc.querySelector('.sa-team-grid');
+    if (!track || reduceMotion) return;
+    var phone = window.matchMedia('(max-width: 639px)');
+    var cards = [].slice.call(track.querySelectorAll('.sa-team-card'));
+    if (!cards.length) return;
+    var timer = null;
+    var resumeTimer = null;
+    var direction = 1;
+
+    function stop() {
+      if (timer) window.clearInterval(timer);
+      timer = null;
+    }
+    function start() {
+      stop();
+      if (!phone.matches || doc.hidden || track.matches(':hover') || track.contains(doc.activeElement)) return;
+      timer = window.setInterval(function () {
+        if (!phone.matches || doc.hidden || track.contains(doc.activeElement)) return;
+        var left = track.getBoundingClientRect().left;
+        var index = 0;
+        var nearest = Infinity;
+        cards.forEach(function (card, i) {
+          var distance = Math.abs(card.getBoundingClientRect().left - left);
+          if (distance < nearest) { nearest = distance; index = i; }
+        });
+        var next = index + direction;
+        if (next >= cards.length || next < 0) {
+          direction *= -1;
+          next = index + direction;
+        }
+        var target = track.scrollLeft + cards[next].getBoundingClientRect().left - left;
+        track.scrollTo({ left: target, behavior: 'smooth' });
+      }, 4800);
+    }
+    function pause() {
+      stop();
+      if (resumeTimer) window.clearTimeout(resumeTimer);
+      resumeTimer = window.setTimeout(start, 7000);
+    }
+    ['pointerdown', 'touchstart', 'focusin'].forEach(function (eventName) {
+      track.addEventListener(eventName, pause, { passive: true });
+    });
+    track.addEventListener('pointerenter', stop);
+    track.addEventListener('pointerleave', start);
+    doc.addEventListener('visibilitychange', start);
+    if (phone.addEventListener) phone.addEventListener('change', start);
+    else if (phone.addListener) phone.addListener(start);
+    start();
   }
 
   /* ---------- header shadow on scroll ---------- */
