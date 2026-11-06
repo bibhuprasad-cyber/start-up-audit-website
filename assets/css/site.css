@@ -428,11 +428,17 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
 
 /* Homepage hero: compact phone layout only. Tablet and desktop retain the existing design. */
 @media (max-width: 639px) {
+  /* Keep the homepage masthead compact on phones to give more room to the hero. */
+  body[data-page="home"] .sa-header__bar { height: 64px; padding-inline: 16px; }
+  body[data-page="home"] .sa-brand img { height: 27px; }
+  body[data-page="home"] .sa-brand span { font-size: 1.05rem; }
+  body[data-page="home"] .sa-burger { width: 40px; height: 40px; }
+  body[data-page="home"] main#main { padding-top: 64px; }
   #home-hero > .relative { min-height: 0; }
-  #home-hero > .relative > .relative.z-20 { padding-top: 36px; padding-bottom: 30px; }
-  #home-hero .max-w-2xl.space-y-space-md > :not(:last-child) { margin-block-end: 14px; }
-  #home-hero h1 { font-size: clamp(28px, 8vw, 32px); line-height: 1.08; }
-  #home-hero p.text-body-lg { font-size: 16px; line-height: 1.48; }
+  #home-hero > .relative > .relative.z-20 { padding-top: 22px; padding-bottom: 20px; }
+  #home-hero .max-w-2xl.space-y-space-md > :not(:last-child) { margin-block-end: 10px; }
+  #home-hero h1 { font-size: clamp(25px, 7.2vw, 29px); line-height: 1.04; }
+  #home-hero p.text-body-lg { font-size: 14px; line-height: 1.38; }
   #home-hero > .relative > .absolute.inset-0.z-10 {
     background: linear-gradient(90deg, rgba(41,49,51,.92) 0%, rgba(41,49,51,.82) 58%, rgba(41,49,51,.68) 100%),
                 linear-gradient(0deg, rgba(41,49,51,.86) 0%, transparent 48%);
@@ -446,12 +452,12 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
   }
   #home-hero .pt-space-md > a {
     min-width: 0;
-    min-height: 48px;
+    min-height: 44px;
     justify-content: center;
     padding: 10px 8px;
-    font-size: 10px;
+    font-size: 11px;
     line-height: 1.2;
-    letter-spacing: .06em;
+    letter-spacing: .04em;
     white-space: nowrap;
   }
   #home-hero .pt-space-md > div.w-full { grid-column: 1 / -1; padding-top: 0; }
