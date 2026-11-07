@@ -1326,3 +1326,8 @@
 .sa-team-card > div:nth-child(2) > details {
   margin-top: auto;
 }
+/* Founder intro: full text always visible on desktop/tablet, "Read more" only on phones */
+@media (min-width: 40rem) {
+  details[data-founder-more] > summary { display: none; }
+  details[data-founder-more] > div { padding-top: 0; margin-top: 1.25rem; }
+}
