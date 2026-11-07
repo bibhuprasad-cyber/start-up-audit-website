@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://startup-audit.pages.dev/sitemap.xml
