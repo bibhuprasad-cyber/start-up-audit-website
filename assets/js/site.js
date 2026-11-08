@@ -132,6 +132,32 @@
       status.className = 'font-body-sm text-body-sm ' + (ok ? 'text-primary' : 'text-on-surface');
     }
 
+    function showSent() {
+      var old = form.querySelector('.sa-sent'); if (old) old.remove();
+      var dots = '';
+      for (var i = 0; i < 14; i++) {
+        var ang = (360 / 14) * i;
+        dots += '<i style="--a:' + ang + 'deg;--d:' + (62 + (i % 3) * 14) + 'px;--t:' + (i % 4) * 40 + 'ms"></i>';
+      }
+      var card = doc.createElement('div');
+      card.className = 'sa-sent' + (reduceMotion ? ' sa-sent--static' : '');
+      card.setAttribute('role', 'status');
+      card.innerHTML =
+        '<div class="sa-sent__mark" aria-hidden="true">' + dots +
+        '<svg viewBox="0 0 52 52" width="88" height="88"><circle class="sa-sent__ring" cx="26" cy="26" r="24" fill="none"/>' +
+        '<path class="sa-sent__tick" fill="none" d="M14.5 27.5l8 8 15-17"/></svg></div>' +
+        '<h3 class="sa-sent__title">Enquiry sent</h3>' +
+        '<p class="sa-sent__text">Thank you. We have received your details and will reply to the email you gave.</p>' +
+        '<button type="button" class="sa-sent__again">Send another enquiry</button>';
+      form.classList.add('is-sent');
+      form.insertBefore(card, form.firstChild);
+      card.querySelector('.sa-sent__again').addEventListener('click', function () {
+        card.remove(); form.classList.remove('is-sent'); say('', false);
+        var first = form.querySelector('#f-name'); if (first) first.focus();
+      });
+      if (card.scrollIntoView) card.scrollIntoView({ behavior: reduceMotion ? 'auto' : 'smooth', block: 'center' });
+    }
+
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
@@ -178,7 +204,8 @@
         .then(function (res) {
           if (res.ok && res.j && res.j.success) {
             form.reset();
-            say('Thank you. Your enquiry has been sent. We will reply to the email you gave.', true);
+            say('', true);
+            showSent();
           } else {
             say('Sorry, your enquiry could not be sent. ' + fallback, false);
           }
