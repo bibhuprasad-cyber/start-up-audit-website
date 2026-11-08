@@ -113,20 +113,31 @@
     if (mq.addEventListener) mq.addEventListener('change', onChange); else if (mq.addListener) mq.addListener(onChange);
   }
 
-  /* ---------- enquiry form (mailto — the site has no backend) ---------- */
+  /* ---------- enquiry form (sent through Web3Forms to the studio inbox) ---------- */
+  var FORM_ENDPOINT = 'https://api.web3forms.com/submit';
+  var FORM_ACCESS_KEY = 'c89484de-4c01-45e4-9880-dc219169f3d4';
   function initEnquiryForm() {
     var form = doc.querySelector('[data-enquiry]');
     if (!form) return;
     var status = doc.getElementById('form-status');
     var select = form.querySelector('#f-area');
+    var button = form.querySelector('button[type="submit"]');
 
     var wanted = new URLSearchParams(window.location.search).get('area');
     if (wanted && select && select.querySelector('option[value="' + wanted + '"]')) select.value = wanted;
+
+    function say(html, ok) {
+      if (!status) return;
+      status.innerHTML = html;
+      status.className = 'font-body-sm text-body-sm ' + (ok ? 'text-primary' : 'text-on-surface');
+    }
 
     form.addEventListener('submit', function (e) {
       e.preventDefault();
       if (!form.checkValidity()) { form.reportValidity(); return; }
       var v = function (id) { return (form.querySelector(id).value || '').trim(); };
+      var honey = form.querySelector('[name="botcheck"]');
+      if (honey && honey.checked) return; // spam bot
       var area = select && select.value ? select.options[select.selectedIndex].text : 'Not sure yet';
       var body = [
         'Name: ' + v('#f-name'),
@@ -137,18 +148,43 @@
         '',
         v('#f-message')
       ].join('\n');
-      var subject = 'Audit enquiry' + (v('#f-business') ? ' — ' + v('#f-business') : '');
-      var href = 'mailto:startupaudit.in@gmail.com?subject=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-      if (status) {
-        var cls = 'text-primary underline underline-offset-4';
-        var gmail = 'https://mail.google.com/mail/?view=cm&fs=1&to=startupaudit.in%40gmail.com&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
-        var wa = 'https://wa.me/917205377366?text=' + encodeURIComponent(subject + '\n\n' + body);
-        status.innerHTML = 'Your email app should open with the enquiry ready to send. If nothing opens, send it via ' +
-          '<a class="' + cls + '" href="' + gmail + '" target="_blank" rel="noopener">Gmail</a>, ' +
-          '<a class="' + cls + '" href="' + wa + '" target="_blank" rel="noopener">WhatsApp</a>, ' +
-          'or write to <a class="' + cls + '" href="' + href + '">startupaudit.in@gmail.com</a> / call +91 7205377366.';
-      }
-      window.location.href = href;
+      var subject = 'Audit enquiry' + (v('#f-business') ? ' \u2014 ' + v('#f-business') : '');
+      var cls = 'text-primary underline underline-offset-4';
+      var gmail = 'https://mail.google.com/mail/?view=cm&fs=1&to=startupaudit.in%40gmail.com&su=' + encodeURIComponent(subject) + '&body=' + encodeURIComponent(body);
+      var wa = 'https://wa.me/917205377366?text=' + encodeURIComponent(subject + '\n\n' + body);
+      var fallback = 'Please send it via <a class="' + cls + '" href="' + gmail + '" target="_blank" rel="noopener">Gmail</a>, ' +
+        '<a class="' + cls + '" href="' + wa + '" target="_blank" rel="noopener">WhatsApp</a>, or call +91 7205377366.';
+
+      if (button) { button.disabled = true; button.style.opacity = '.6'; }
+      say('Sending your enquiry\u2026', false);
+
+      var payload = {
+        access_key: FORM_ACCESS_KEY,
+        subject: subject,
+        from_name: 'Start-up Audit website',
+        name: v('#f-name'),
+        email: v('#f-email'),
+        business: v('#f-business'),
+        phone: v('#f-phone'),
+        audit_area: area,
+        message: v('#f-message')
+      };
+
+      fetch(FORM_ENDPOINT, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+        body: JSON.stringify(payload)
+      }).then(function (r) { return r.json().then(function (j) { return { ok: r.ok, j: j }; }); })
+        .then(function (res) {
+          if (res.ok && res.j && res.j.success) {
+            form.reset();
+            say('Thank you. Your enquiry has been sent. We will reply to the email you gave.', true);
+          } else {
+            say('Sorry, your enquiry could not be sent. ' + fallback, false);
+          }
+        })
+        .catch(function () { say('Sorry, your enquiry could not be sent. ' + fallback, false); })
+        .then(function () { if (button) { button.disabled = false; button.style.opacity = ''; } });
     });
   }
 
