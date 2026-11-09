@@ -728,3 +728,11 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
   .sa-footer__grid { padding-bottom: 1.2rem; }
   .sa-footer__base { padding-top: .8rem; }
 }
+
+/* ---------- Syncpedia case study: phone cover is a landscape image with the text below it ---------- */
+@media (max-width: 767px) {
+  .sp-hero { display: block; min-height: 0; padding: 65px 0 2.25rem; }
+  .sp-hero__img { position: relative; inset: auto; display: block; width: 100%; height: auto; aspect-ratio: 1600 / 893; object-fit: cover; }
+  .sp-hero__shade { inset: 65px 0 auto 0; height: auto; aspect-ratio: 1600 / 893; background: linear-gradient(0deg, #293133 0%, rgba(41,49,51,.35) 28%, rgba(41,49,51,0) 55%); }
+  .sp-hero__in { padding-top: 1.1rem; }
+}
