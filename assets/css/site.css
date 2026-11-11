@@ -574,7 +574,7 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
   body[data-page="home"] #process .sa-hscroll > div { width: 84%; }
   body[data-page="home"] #process .sa-hscroll > div > div:first-child { margin-bottom: 14px; }
   body[data-page="home"] #process .sa-hscroll > div > div:first-child > div:first-child { width: 48px; height: 48px; font-size: 18px; }
-  body[data-page="home"] #process h4 { font-size: 19px; line-height: 1.25; margin-bottom: 8px; }
+  body[data-page="home"] #process h3 { font-size: 19px; line-height: 1.25; margin-bottom: 8px; }
   body[data-page="home"] #process .sa-hscroll p { font-size: 14px; line-height: 1.55; }
 
   /* Case study cards use the same body size and tighter editorial spacing. */
