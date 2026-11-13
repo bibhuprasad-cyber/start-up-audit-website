@@ -777,3 +777,24 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
 }
 @media (prefers-reduced-motion: reduce) { .sa-faq summary::after { transition: none; } }
 .sa-scope-notes div > h3 { font-size: 12px !important; line-height: 1.4 !important; letter-spacing: .12em !important; }
+
+/* Case study: Sip and Squeeze (compact text layout) */
+.sa-cs-sec { width: 100%; background: #fff; border-top: 1px solid rgba(41,49,51,.12); padding: 3.5rem 0; }
+.sa-cs-sec--alt { background: #E5E4E2; }
+.sa-cs-sec > div { max-width: 1440px; margin: 0 auto; padding: 0 1.25rem; }
+.sa-cs-card { background: #F3F2F1; padding: 1.5rem; }
+.sa-cs-sec--alt .sa-cs-card { background: #fff; }
+.sa-cs-grid { display: grid; grid-template-columns: 1fr; gap: 1rem; margin-top: 2rem; }
+.sa-cs-rows { margin-top: 2rem; border-top: 1px solid rgba(41,49,51,.2); padding: 0; list-style: none; }
+.sa-cs-row { display: grid; grid-template-columns: 1fr; gap: .35rem; padding: 1.25rem 0; border-bottom: 1px solid rgba(41,49,51,.2); }
+.sa-cs-row__t span { margin-right: .6rem; }
+@media (min-width: 768px) {
+  .sa-cs-sec > div { padding: 0 2.5rem; }
+  .sa-cs-grid--2, .sa-cs-grid--3, .sa-cs-grid--4 { grid-template-columns: 1fr 1fr; }
+  .sa-cs-row { grid-template-columns: 4fr 8fr; gap: 2rem; }
+}
+@media (min-width: 1024px) {
+  .sa-cs-sec { padding: 5.5rem 0; }
+  .sa-cs-grid--3 { grid-template-columns: repeat(3, 1fr); }
+  .sa-cs-grid--4 { grid-template-columns: repeat(4, 1fr); }
+}
