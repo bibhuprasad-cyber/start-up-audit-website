@@ -773,7 +773,7 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
 @media (min-width: 1024px) {
   .sa-scope-box { padding: 2rem; }
   .sa-scope-bp { grid-template-columns: repeat(5, 1fr); }
-  .sa-scope-notes { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .sa-scope-notes { grid-template-columns: repeat(4, 1fr); gap: 2rem; }
 }
 @media (prefers-reduced-motion: reduce) { .sa-faq summary::after { transition: none; } }
 .sa-scope-notes div > h3 { font-size: 12px !important; line-height: 1.4 !important; letter-spacing: .12em !important; }
