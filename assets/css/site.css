@@ -745,3 +745,35 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
   .sp-hero .sp-lead { font-size: 2.35vw !important; line-height: 1.4 !important; margin: 0 !important; max-width: 58%; }
   .sp-hero .sp-foot--hero { font-size: 1.6vw; line-height: 1.5; margin-top: 1.8vw; max-width: 70%; }
 }
+
+/* Audit Scope page additions */
+.sa-scope-receive { margin-top: .75rem; }
+.sa-scope-two { display: grid; grid-template-columns: 1fr; gap: 1.5rem; }
+.sa-scope-box { padding: 1.5rem; background: #fff; border: 1px solid rgba(41,49,51,.18); }
+.sa-scope-box ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.sa-scope-box li { position: relative; padding-left: 1.75rem; line-height: 1.55; }
+.sa-scope-box li::before { content: ""; position: absolute; left: 0; top: .5em; width: .6rem; height: .6rem; background: #008080; }
+.sa-scope-box--no li::before { height: 2px; top: .8em; background: #293133; }
+.sa-scope-bp { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: 1fr; gap: 1.75rem; }
+.sa-scope-bp li { border-top: 2px solid #008080; padding-top: 1rem; }
+.sa-scope-notes { display: grid; grid-template-columns: 1fr; gap: 1.5rem; margin-top: 3rem; padding-top: 2rem; border-top: 1px solid rgba(41,49,51,.18); }
+.sa-faq details { border-top: 1px solid rgba(41,49,51,.18); }
+.sa-faq details:last-child { border-bottom: 1px solid rgba(41,49,51,.18); }
+.sa-faq summary { list-style: none; cursor: pointer; display: flex; justify-content: space-between; align-items: center; gap: 1rem; padding: 1.25rem 0; }
+.sa-faq summary::-webkit-details-marker { display: none; }
+.sa-faq summary::after { content: "+"; flex: 0 0 auto; font-size: 1.75rem; line-height: 1; color: #008080; transition: transform .2s ease; }
+.sa-faq details[open] summary::after { transform: rotate(45deg); }
+.sa-faq summary:focus-visible { outline: 2px solid #008080; outline-offset: 4px; }
+.sa-faq details p { margin: 0; padding: 0 2.5rem 1.5rem 0; max-width: 46rem; }
+@media (min-width: 768px) {
+  .sa-scope-two { grid-template-columns: 1fr 1fr; gap: 2rem; }
+  .sa-scope-bp { grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+  .sa-scope-notes { grid-template-columns: 1fr 1fr; }
+}
+@media (min-width: 1024px) {
+  .sa-scope-box { padding: 2rem; }
+  .sa-scope-bp { grid-template-columns: repeat(5, 1fr); }
+  .sa-scope-notes { grid-template-columns: repeat(4, 1fr); gap: 2rem; }
+}
+@media (prefers-reduced-motion: reduce) { .sa-faq summary::after { transition: none; } }
+.sa-scope-notes div > h3 { font-size: 12px !important; line-height: 1.4 !important; letter-spacing: .12em !important; }
