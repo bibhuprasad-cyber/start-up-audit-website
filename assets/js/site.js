@@ -170,7 +170,7 @@
         'Business: ' + (v('#f-business') || '-'),
         'Email: ' + v('#f-email'),
         'Phone: ' + (v('#f-phone') || '-'),
-        'Audit area of interest: ' + area,
+        'Area of concern: ' + area,
         '',
         v('#f-message')
       ].join('\n');
