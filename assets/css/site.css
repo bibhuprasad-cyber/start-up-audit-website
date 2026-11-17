@@ -860,3 +860,7 @@ main img[src*="founder-portrait"] { object-position: 50% 18%; }
   .sa-road li { padding-right: .75rem; }
   .sa-road li strong { font-size: 16px; }
 }
+
+.sa-scope-track { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; counter-reset: tr; }
+.sa-scope-track li { counter-increment: tr; position: relative; padding-left: 2.5rem; line-height: 1.55; color: #4a5154; }
+.sa-scope-track li::before { content: counter(tr); position: absolute; left: 0; top: .05em; width: 1.6rem; height: 1.6rem; border-radius: 50%; background: #008080; color: #fff; font: 700 12px/1.6rem Inter, sans-serif; text-align: center; }
