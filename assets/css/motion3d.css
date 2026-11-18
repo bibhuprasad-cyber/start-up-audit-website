@@ -1,0 +1,6 @@
+/* Start-up Audit — 3D motion layer (pairs with assets/js/motion3d.js). Visual design is untouched. */
+.sa3d { transform-origin: 50% 50%; backface-visibility: hidden; will-change: transform; }
+@media (hover: none), (pointer: coarse), (max-width: 899px), (prefers-reduced-motion: reduce) {
+  .sa3d { transform: none !important; will-change: auto; }
+}
+html.sa-motion-on .sa3d { will-change: transform; }
