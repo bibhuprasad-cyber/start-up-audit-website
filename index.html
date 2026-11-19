@@ -34,8 +34,10 @@
 <link rel="stylesheet" href="assets/css/home.css">
 <link rel="stylesheet" href="assets/css/site.css">
 <link rel="stylesheet" href="assets/css/hero3d.css">
+<link rel="stylesheet" href="assets/css/audit3d.css">
 <script src="assets/js/site.js" defer></script>
 <script src="assets/js/hero3d.js" defer></script>
+<script src="assets/js/audit3d.js" defer></script>
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -281,249 +283,81 @@
     A business growth and operations audit for leadership teams facing stalled growth, workflow bottlenecks, or customer acquisition challenges.
   </p>
 </div>
-<div class="sa-hscroll sa-chapter-track flex items-start gap-4 overflow-x-auto snap-x snap-mandatory pb-6 md:block md:overflow-visible md:pb-0" aria-label="Audit chapters">
-<!-- ================= CHAPTER 01 ================= -->
-<div class="sa-chapter relative shrink-0 w-[88%] snap-start md:w-auto md:shrink mb-0 md:mb-14 lg:mb-36">
-<!-- Top chapter marker hairline -->
-<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pb-4 mb-8 border-b border-[#293133]/15">
-<div class="flex items-center gap-3">
-<span class="font-label-md text-xs uppercase tracking-widest text-[#008080] font-bold whitespace-nowrap">CHAPTER 01</span>
-<span class="text-[#293133]/30">/</span>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#4A5254]">IDENTITY &amp; TOUCHPOINTS</span>
+<!-- Interactive 3D audit-dimension system (assets/js/audit3d.js, assets/css/audit3d.css). Every dimension below is real HTML so it still reads without WebGL or JavaScript. -->
+<div class="a3d" data-a3d>
+<div class="a3d-console" aria-label="Six audit dimensions">
+<div class="a3d-stage">
+<canvas class="a3d-canvas" aria-hidden="true"></canvas>
+<div class="a3d-hud" aria-hidden="true"><span class="a3d-dot"></span>AUDIT MAP <i>/</i> 06 DIMENSIONS</div>
+<div class="a3d-hint" aria-hidden="true"><span class="a3d-hint-d">Drag to rotate · Select a module</span><span class="a3d-hint-m">Swipe to rotate · Tap a module</span></div>
+<div class="a3d-tag" aria-hidden="true"></div>
 </div>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#293133]/40 whitespace-nowrap">STAGE 01 OF 06</span>
+<div class="a3d-list" role="group" aria-label="Choose an audit dimension">
+<button type="button" class="a3d-item" data-i="0" style="--i:0" aria-pressed="false"><b>01</b><span>Brand &amp; Digital Presence</span></button>
+<button type="button" class="a3d-item" data-i="1" style="--i:1" aria-pressed="false"><b>02</b><span>Business Model &amp; Financial Review</span></button>
+<button type="button" class="a3d-item" data-i="2" style="--i:2" aria-pressed="false"><b>03</b><span>Operations</span></button>
+<button type="button" class="a3d-item" data-i="3" style="--i:3" aria-pressed="false"><b>04</b><span>Customer Experience</span></button>
+<button type="button" class="a3d-item" data-i="4" style="--i:4" aria-pressed="false"><b>05</b><span>Marketing &amp; Retention</span></button>
+<button type="button" class="a3d-item" data-i="5" style="--i:5" aria-pressed="false"><b>06</b><span>Growth &amp; Business Strategy</span></button>
 </div>
-<!-- Oversized cinematic landscape occupying ~80-85% width -->
-<div class="relative w-full lg:w-[85%] ml-auto aspect-[4/3] sm:aspect-[16/9] lg:aspect-[21/9] lg:min-h-[460px] max-h-[520px] bg-[#E0DFDC] overflow-hidden" data-img-reveal>
-<img src="assets/img/ch1-brand-storefront.jpg" alt="A modern independent clothing boutique with a glass shopfront on a busy neighbourhood street." loading="lazy" decoding="async" class="w-full h-full object-cover object-center">
-</div>
-<!-- Architectural Overlapping Text Plate (Lower-Left) -->
-<div class="mt-6 lg:mt-0 lg:absolute lg:bottom-[-36px] lg:left-0 lg:w-[500px] z-20 bg-[#FFFFFF] p-5 sm:p-8 lg:p-10 border border-[#293133]/20 shadow-sm">
-<div class="flex items-start justify-between mb-4">
-<span class="font-display-lg text-4xl lg:text-5xl font-bold text-[#008080] leading-none">01</span>
-<span class="font-label-sm text-[10px] tracking-widest uppercase text-[#4A5254] border border-[#293133]/15 px-2 py-0.5">BRAND &amp; DIGITAL PRESENCE</span>
-</div>
-<h3 data-text-reveal class="font-headline-lg text-xl lg:text-3xl text-[#293133] font-bold mb-3 leading-tight">Brand &amp; Digital Presence Audit</h3>
-<p class="font-body-md text-body-md text-[#4A5254] leading-relaxed mb-6">
-      We review your website, search and social presence, brand message and customer journey to find gaps that make it harder for the right customers to find and trust you.
-    </p>
-<a class="group inline-flex items-center gap-2 font-label-md text-xs uppercase tracking-widest text-[#293133] hover:text-[#008080] font-semibold transition-colors" href="audit-scope.html#brand-digital-presence">
-<span class="">Explore audit →</span>
-</a>
-</div>
-</div>
-<!-- ================= CHAPTER 02 ================= -->
-<div class="sa-chapter relative pt-4 lg:pt-16 shrink-0 w-[88%] snap-start md:w-auto md:shrink mb-0 md:mb-14 lg:mb-36">
-<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pb-4 mb-10 border-b border-[#293133]/15">
-<div class="flex items-center gap-3">
-<span class="font-label-md text-xs uppercase tracking-widest text-[#008080] font-bold whitespace-nowrap">CHAPTER 02</span>
-<span class="text-[#293133]/30">/</span>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#4A5254]">CAPITAL &amp; MARGIN INTEGRITY</span>
-</div>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#293133]/40 whitespace-nowrap">STAGE 02 OF 06</span>
-</div>
-<!-- Asymmetric Split: Generous Left Editorial + Tall Portrait Right Photo -->
-<div class="grid grid-cols-12 gap-8 lg:gap-14 items-center">
-<!-- Left Editorial Column -->
-<div class="col-span-12 lg:col-span-6 flex flex-col justify-center pr-0 lg:pr-8">
-<div class="text-[52px] lg:text-[100px] font-display-lg font-bold text-[#293133]/15 leading-none mb-2 select-none">
-        02
-      </div>
-<div class="font-label-md text-xs text-[#008080] font-bold tracking-widest uppercase mb-3">
-        02 — BUSINESS MODEL &amp; FINANCIAL REVIEW
-      </div>
-<h3 data-text-reveal class="font-headline-xl text-2xl lg:text-4xl text-[#293133] font-bold mb-5 leading-tight">
-        Business Model &amp; Financial Review
-      </h3>
-<div class="w-16 h-[2px] bg-[#008080] mb-6"></div>
-<p class="font-body-lg text-lg text-[#4A5254] leading-relaxed mb-8">
-        We examine the business model, pricing, margins and operating costs to find financial weak points early.
-      </p>
-<div>
-<a class="group inline-flex items-center gap-2 font-label-md text-xs uppercase tracking-widest text-[#293133] hover:text-[#008080] font-semibold transition-colors" href="audit-scope.html#business-model-financial-review">
-<span class="">Explore audit →</span>
-</a>
-</div>
-</div>
-<!-- Right Tall Portrait Photograph -->
-<div class="col-span-12 lg:col-span-6">
-<div class="relative w-full aspect-[4/3] lg:aspect-auto lg:h-[560px] bg-[#E0DFDC] overflow-hidden border border-[#293133]/20" data-img-reveal>
-<img src="assets/img/ch2-financial-ledger.jpg" alt="An overhead view of hands reviewing printed financial statements beside a calculator and a laptop showing a spreadsheet." loading="lazy" decoding="async" class="w-full h-full object-cover">
-<div class="absolute bottom-4 right-4 bg-[#293133]/85 text-white/90 px-3 py-1 font-label-sm text-[11px] uppercase tracking-wider backdrop-blur-sm">
-          FINANCIAL REVIEW
-        </div>
-</div>
-</div>
-</div>
-</div>
-<!-- ================= CHAPTER 03 ================= -->
-<div class="sa-chapter relative pt-6 shrink-0 w-[88%] snap-start md:w-auto md:shrink mb-0 md:mb-14 lg:mb-36">
-<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pb-4 mb-8 border-b border-[#293133]/15">
-<div class="flex items-center gap-3">
-<span class="font-label-md text-xs uppercase tracking-widest text-[#008080] font-bold whitespace-nowrap">CHAPTER 03</span>
-<span class="text-[#293133]/30">/</span>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#4A5254]">CAPACITY &amp; THROUGHPUT</span>
-</div>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#293133]/40 whitespace-nowrap">STAGE 03 OF 06</span>
-</div>
-<!-- Grand Panoramic Image with Floating Dark Charcoal Block -->
-<div class="relative w-full min-h-[360px] lg:min-h-[540px] bg-[#293133] overflow-hidden border border-[#293133]/20 flex items-center lg:items-end">
-<!-- Panoramic Backroom Image -->
-<div class="absolute inset-0 z-0 overflow-hidden">
-<img src="assets/img/ch3-warehouse.jpg" alt="Two staff members packing and checking stock beside steel shelving in a small business stockroom." loading="lazy" decoding="async" data-parallax class="w-full h-full object-cover">
-</div>
-<!-- Subtle gradient to ensure legible overlay contrast -->
-<div class="absolute inset-0 z-10 pointer-events-none" style="background: linear-gradient(135deg, rgba(41,49,51,0.85) 0%, rgba(41,49,51,0.4) 60%, rgba(41,49,51,0.2) 100%);"></div>
-<!-- Floating Minimal Dark Charcoal Block (Top-left / Bottom-left anchored) -->
-<div class="relative z-20 m-6 lg:m-12 max-w-lg bg-[#293133]/95 backdrop-blur-sm p-5 sm:p-8 lg:p-10 border-l-4 border-[#008080] border-t border-r border-b border-[#293133]">
-<div class="flex items-center justify-between mb-4">
-<span class="font-display-lg text-4xl lg:text-5xl font-bold text-[#008080] leading-none">03</span>
-<span class="font-label-sm text-[10px] tracking-widest uppercase text-[#dce4e6]/70">OPERATIONAL AUDIT</span>
-</div>
-<h3 data-text-reveal class="font-headline-lg text-xl lg:text-3xl text-[#FFFFFF] font-bold mb-3 leading-tight">Operational &amp; Workflow Audit</h3>
-<p class="font-body-md text-body-md text-[#dce4e6] leading-relaxed mb-6">
-        We map key workflows, handoffs, delays and responsibilities to find bottlenecks, then suggest prioritised improvements with practical timelines.
-      </p>
-<a class="group inline-flex items-center gap-2 font-label-md text-xs uppercase tracking-widest text-[#008080] hover:text-[#FFFFFF] font-semibold transition-colors" href="audit-scope.html#operational-workflow-audit">
-<span class="">Explore audit →</span>
-</a>
+<div class="a3d-panel" aria-live="polite">
+<article class="a3d-art a3d-art--intro is-active" data-i="-1" aria-labelledby="a3d-t-intro">
+<div class="a3d-meta"><span class="a3d-chap">SIX AUDIT DIMENSIONS</span></div>
+<h3 id="a3d-t-intro">Select a module</h3>
+<p>Choose a module in the structure, or pick one from the list, to see what each audit examines.</p>
+</article>
+<article class="a3d-art" data-i="0" aria-labelledby="a3d-t0">
+<div class="a3d-meta"><span class="a3d-chap">CHAPTER 01 <i>/</i> IDENTITY &amp; TOUCHPOINTS</span><span class="a3d-stagen">STAGE 01 OF 06</span></div>
+<figure class="a3d-fig"><img src="assets/img/ch1-brand-storefront.jpg" alt="A modern independent clothing boutique with a glass shopfront on a busy neighbourhood street." width="1264" height="848" loading="lazy" decoding="async"></figure>
+<div class="a3d-head"><span class="a3d-num">01</span><span class="a3d-chip">BRAND &amp; DIGITAL PRESENCE</span></div>
+<h3 id="a3d-t0">Brand &amp; Digital Presence Audit</h3>
+<p>We review your website, search and social presence, brand message and customer journey to find gaps that make it harder for the right customers to find and trust you.</p>
+<div class="a3d-actions"><a class="a3d-link" href="audit-scope.html#brand-digital-presence">Explore audit →</a><button type="button" class="a3d-back" data-back>All six dimensions</button></div>
+</article>
+<article class="a3d-art" data-i="1" aria-labelledby="a3d-t1">
+<div class="a3d-meta"><span class="a3d-chap">CHAPTER 02 <i>/</i> CAPITAL &amp; MARGIN INTEGRITY</span><span class="a3d-stagen">STAGE 02 OF 06</span></div>
+<figure class="a3d-fig"><img src="assets/img/ch2-financial-ledger.jpg" alt="An overhead view of hands reviewing printed financial statements beside a calculator and a laptop showing a spreadsheet." width="1264" height="848" loading="lazy" decoding="async"><figcaption>FINANCIAL REVIEW</figcaption></figure>
+<div class="a3d-head"><span class="a3d-num">02</span><span class="a3d-chip">BUSINESS MODEL &amp; FINANCIAL REVIEW</span></div>
+<h3 id="a3d-t1">Business Model &amp; Financial Review</h3>
+<p>We examine the business model, pricing, margins and operating costs to find financial weak points early.</p>
+<div class="a3d-actions"><a class="a3d-link" href="audit-scope.html#business-model-financial-review">Explore audit →</a><button type="button" class="a3d-back" data-back>All six dimensions</button></div>
+</article>
+<article class="a3d-art" data-i="2" aria-labelledby="a3d-t2">
+<div class="a3d-meta"><span class="a3d-chap">CHAPTER 03 <i>/</i> CAPACITY &amp; THROUGHPUT</span><span class="a3d-stagen">STAGE 03 OF 06</span></div>
+<figure class="a3d-fig"><img src="assets/img/ch3-warehouse.jpg" alt="Two staff members packing and checking stock beside steel shelving in a small business stockroom." width="1264" height="848" loading="lazy" decoding="async"></figure>
+<div class="a3d-head"><span class="a3d-num">03</span><span class="a3d-chip">OPERATIONAL AUDIT</span></div>
+<h3 id="a3d-t2">Operational &amp; Workflow Audit</h3>
+<p>We map key workflows, handoffs, delays and responsibilities to find bottlenecks, then suggest prioritised improvements with practical timelines.</p>
+<div class="a3d-actions"><a class="a3d-link" href="audit-scope.html#operational-workflow-audit">Explore audit →</a><button type="button" class="a3d-back" data-back>All six dimensions</button></div>
+</article>
+<article class="a3d-art" data-i="3" aria-labelledby="a3d-t3">
+<div class="a3d-meta"><span class="a3d-chap">CHAPTER 04 <i>/</i> JOURNEY &amp; RETENTION</span><span class="a3d-stagen">STAGE 04 OF 06</span></div>
+<figure class="a3d-fig"><img src="assets/img/ch4-service-point.jpg" alt="A cafe owner handing a paper bag across the counter to a smiling customer." width="1264" height="848" loading="lazy" decoding="async"><figcaption>SERVICE POINT MAPPING</figcaption></figure>
+<div class="a3d-head"><span class="a3d-num">04</span><span class="a3d-chip">CUSTOMER EXPERIENCE AUDIT</span></div>
+<h3 id="a3d-t3">Customer Experience Audit</h3>
+<p>We trace the customer journey from discovery to enquiry, purchase and repeat business to find friction limiting acquisition or loyalty.</p>
+<div class="a3d-actions"><a class="a3d-link" href="audit-scope.html#customer-experience-audit">Explore audit →</a><button type="button" class="a3d-back" data-back>All six dimensions</button></div>
+</article>
+<article class="a3d-art" data-i="4" aria-labelledby="a3d-t4">
+<div class="a3d-meta"><span class="a3d-chap">CHAPTER 05 <i>/</i> CONVERSION &amp; RETENTION</span><span class="a3d-stagen">STAGE 05 OF 06</span></div>
+<figure class="a3d-fig"><img src="assets/img/ch5-botanical-storefront.jpg" alt="An inviting neighbourhood shop with large windows, planters and cafe seating on the pavement." width="1264" height="848" loading="lazy" decoding="async"><figcaption>COMMUNICATION CADENCE</figcaption></figure>
+<div class="a3d-head"><span class="a3d-num">05</span><span class="a3d-chip">MARKETING &amp; CUSTOMER RETENTION</span><span class="a3d-sub">SUSTAINABLE REPEAT DEMAND</span></div>
+<h3 id="a3d-t4">Digital Marketing Audit &amp; Customer Acquisition</h3>
+<p>We review marketing channels, messaging and conversion paths to assess how customers are acquired, where prospects drop off and how retention can improve.</p>
+<div class="a3d-actions"><a class="a3d-link" href="audit-scope.html#marketing-customer-retention">Explore audit →</a><button type="button" class="a3d-back" data-back>All six dimensions</button></div>
+</article>
+<article class="a3d-art" data-i="5" aria-labelledby="a3d-t5">
+<div class="a3d-meta"><span class="a3d-chap">CHAPTER 06 <i>/</i> MACRO STRATEGY &amp; CAPITAL</span><span class="a3d-stagen">STAGE 06 OF 06 — FINALE</span></div>
+<figure class="a3d-fig"><img src="assets/img/case-technology-office.jpg" alt="Four colleagues gathered around a long table reviewing plans in a modern open office." width="1376" height="768" loading="lazy" decoding="async"><figcaption>PHASED EXPANSION FRAMEWORK</figcaption></figure>
+<div class="a3d-head"><span class="a3d-num">06</span><span class="a3d-chip">GROWTH &amp; BUSINESS STRATEGY</span></div>
+<h3 id="a3d-t5">Growth &amp; Business Strategy</h3>
+<p>Where revenue exists but growth has stalled, we review positioning, capacity and past growth efforts to set practical priorities in a roadmap.</p>
+<div class="a3d-actions"><a class="a3d-link" href="audit-scope.html#growth-business-strategy">Explore audit →</a><button type="button" class="a3d-back" data-back>All six dimensions</button></div>
+</article>
 </div>
 </div>
 </div>
-<!-- ================= CHAPTER 04 ================= -->
-<div class="sa-chapter relative pt-6 shrink-0 w-[88%] snap-start md:w-auto md:shrink mb-0 md:mb-14 lg:mb-36">
-<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pb-4 mb-10 border-b border-[#293133]/15">
-<div class="flex items-center gap-3">
-<span class="font-label-md text-xs uppercase tracking-widest text-[#008080] font-bold whitespace-nowrap">CHAPTER 04</span>
-<span class="text-[#293133]/30">/</span>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#4A5254]">JOURNEY &amp; RETENTION</span>
-</div>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#293133]/40 whitespace-nowrap">STAGE 04 OF 06</span>
-</div>
-<!-- Classic Magazine Split: Left Photo, Right Whitespace & Headline -->
-<div class="grid grid-cols-12 gap-8 lg:gap-14 items-center">
-<!-- Left Expansive Photograph -->
-<div class="col-span-12 lg:col-span-7 order-2 lg:order-1">
-<div class="relative w-full aspect-[4/3] lg:aspect-[16/11] bg-[#E0DFDC] overflow-hidden border border-[#293133]/20" data-img-reveal>
-<img src="assets/img/ch4-service-point.jpg" alt="A cafe owner handing a paper bag across the counter to a smiling customer." loading="lazy" decoding="async" class="w-full h-full object-cover">
-<div class="absolute top-4 left-4 bg-[#293133] text-white px-3 py-1 font-label-sm text-[11px] uppercase tracking-widest font-semibold border-l-2 border-[#008080]">
-          SERVICE POINT MAPPING
-        </div>
-</div>
-</div>
-<!-- Right Typography & Whitespace -->
-<div class="col-span-12 lg:col-span-5 order-1 lg:order-2 pl-0 lg:pl-6">
-<div class="text-[52px] lg:text-[100px] font-display-lg font-bold text-[#293133]/15 leading-none mb-2 select-none">
-        04
-      </div>
-<div class="font-label-md text-xs text-[#008080] font-bold tracking-widest uppercase mb-3">
-        04 — CUSTOMER EXPERIENCE AUDIT
-      </div>
-<h3 data-text-reveal class="font-headline-xl text-2xl lg:text-4xl text-[#293133] font-bold mb-5 leading-tight">
-        Customer Experience Audit
-      </h3>
-<div class="w-16 h-[2px] bg-[#008080] mb-6"></div>
-<p class="font-body-lg text-lg text-[#4A5254] leading-relaxed mb-8">
-        We trace the customer journey from discovery to enquiry, purchase and repeat business to find friction limiting acquisition or loyalty.
-      </p>
-<div>
-<a class="group inline-flex items-center gap-2 font-label-md text-xs uppercase tracking-widest text-[#293133] hover:text-[#008080] font-semibold transition-colors" href="audit-scope.html#customer-experience-audit">
-<span class="">Explore audit →</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-<!-- ================= CHAPTER 05 ================= -->
-<div class="sa-chapter relative pt-6 shrink-0 w-[88%] snap-start md:w-auto md:shrink mb-0 md:mb-14 lg:mb-36">
-<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pb-4 mb-10 border-b border-[#293133]/15">
-<div class="flex items-center gap-3">
-<span class="font-label-md text-xs uppercase tracking-widest text-[#008080] font-bold whitespace-nowrap">CHAPTER 05</span>
-<span class="text-[#293133]/30">/</span>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#4A5254]">CONVERSION &amp; RETENTION</span>
-</div>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#293133]/40 whitespace-nowrap">STAGE 05 OF 06</span>
-</div>
-<!-- Unexpected Editorial Cadence: Narrow Vertical Photo + Baseline-Aligned Text Composition -->
-<div class="grid grid-cols-12 gap-8 lg:gap-14 items-end">
-<!-- Narrow Vertical Photograph -->
-<div class="col-span-12 lg:col-span-4">
-<div class="relative w-full aspect-[4/3] lg:aspect-auto lg:h-[480px] bg-[#E0DFDC] overflow-hidden border border-[#293133]/20" data-img-reveal>
-<img src="assets/img/ch5-botanical-storefront.jpg" alt="An inviting neighbourhood shop with large windows, planters and cafe seating on the pavement." loading="lazy" decoding="async" class="w-full h-full object-cover">
-<div class="absolute bottom-4 left-4 bg-[#293133] text-white px-3 py-1 font-label-sm text-[10px] uppercase tracking-widest font-semibold border-l-2 border-[#008080]">
-          COMMUNICATION CADENCE
-        </div>
-</div>
-</div>
-<!-- Sculptural Baseline-Aligned Text Composition -->
-<div class="col-span-12 lg:col-span-8 pb-4">
-<!-- Big Sculptural Numeral 05 anchored to hairline rule -->
-<div class="flex items-baseline gap-6 border-b-2 border-[#293133] pb-2 mb-8">
-<span class="font-display-lg text-6xl lg:text-9xl font-bold text-[#008080] leading-none select-none">05</span>
-<div class="flex-1">
-<span class="font-label-md text-xs uppercase tracking-widest text-[#4A5254] block mb-1">05 — MARKETING &amp; CUSTOMER RETENTION</span>
-<span class="font-label-sm text-[11px] uppercase tracking-wider text-[#008080] font-semibold">SUSTAINABLE REPEAT DEMAND</span>
-</div>
-</div>
-<div class="max-w-2xl">
-<h3 data-text-reveal class="font-headline-xl text-xl lg:text-3xl text-[#293133] font-bold mb-4">
-          Digital Marketing Audit &amp; Customer Acquisition
-        </h3>
-<p class="font-body-lg text-lg text-[#4A5254] leading-relaxed mb-6">
-          We review marketing channels, messaging and conversion paths to assess how customers are acquired, where prospects drop off and how retention can improve.
-        </p>
-<a class="group inline-flex items-center gap-2 font-label-md text-xs uppercase tracking-widest text-[#293133] hover:text-[#008080] font-semibold transition-colors" href="audit-scope.html#marketing-customer-retention">
-<span class="">Explore audit →</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-<!-- ================= CHAPTER 06 ================= -->
-<div class="sa-chapter relative pt-6 shrink-0 w-[88%] snap-start md:w-auto md:shrink">
-<div class="flex flex-wrap items-center justify-between gap-x-4 gap-y-1 pb-4 mb-10 border-b border-[#293133]/15">
-<div class="flex items-center gap-3">
-<span class="font-label-md text-xs uppercase tracking-widest text-[#008080] font-bold whitespace-nowrap">CHAPTER 06</span>
-<span class="text-[#293133]/30">/</span>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#4A5254]">MACRO STRATEGY &amp; CAPITAL</span>
-</div>
-<span class="font-label-sm text-label-sm uppercase tracking-widest text-[#293133]/40 whitespace-nowrap">STAGE 06 OF 06 — FINALE</span>
-</div>
-<!-- Grand Finale: Bold Architectural Composition -->
-<div class="grid grid-cols-12 gap-8 lg:gap-14 items-center">
-<!-- Expansive Strategic Workshop Image -->
-<div class="col-span-12 lg:col-span-7">
-<div class="relative w-full aspect-[16/10] bg-[#E0DFDC] overflow-hidden border border-[#293133]/20" data-img-reveal>
-<img src="assets/img/case-technology-office.jpg" alt="Four colleagues gathered around a long table reviewing plans in a modern open office." loading="lazy" decoding="async" class="w-full h-full object-cover">
-<div class="absolute bottom-4 left-4 bg-[#293133] text-white px-3 py-1 font-label-sm text-[10px] uppercase tracking-widest font-semibold border-l-2 border-[#008080]">
-          PHASED EXPANSION FRAMEWORK
-        </div>
-</div>
-</div>
-<!-- Oversized Grand Finale Text Anchor -->
-<div class="col-span-12 lg:col-span-5 pr-0 lg:pr-4">
-<div class="text-[56px] lg:text-[120px] font-display-lg font-bold text-[#293133] leading-none mb-3 tracking-tighter">
-        06
-      </div>
-<div class="font-label-md text-xs text-[#008080] font-bold tracking-widest uppercase mb-3">
-        06 — GROWTH &amp; BUSINESS STRATEGY
-      </div>
-<h3 data-text-reveal class="font-headline-xl text-2xl lg:text-4xl text-[#293133] font-bold mb-4 leading-tight">
-        Growth &amp; Business Strategy
-      </h3>
-<div class="w-20 h-[3px] bg-[#008080] mb-6"></div>
-<p class="font-body-lg text-lg text-[#4A5254] leading-relaxed mb-8">
-        Where revenue exists but growth has stalled, we review positioning, capacity and past growth efforts to set practical priorities in a roadmap.
-      </p>
-<div>
-<a class="group inline-flex items-center gap-2 font-label-md text-xs uppercase tracking-widest text-[#293133] hover:text-[#008080] font-semibold transition-colors" href="audit-scope.html#growth-business-strategy">
-<span class="">Explore audit →</span>
-</a>
-</div>
-</div>
-</div>
-</div>
-</div><!-- /sa-hscroll -->
+
 </div>
 </section>
 <!-- =========================================================================
