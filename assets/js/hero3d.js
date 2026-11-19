@@ -178,7 +178,7 @@
     canvas.setAttribute('aria-hidden', 'true');
     var gl;
     try {
-      gl = canvas.getContext('webgl', { alpha: true, antialias: true, premultipliedAlpha: true, powerPreference: 'high-performance' }) ||
+      gl = canvas.getContext('webgl', { alpha: true, antialias: true, depth: true, stencil: false, premultipliedAlpha: true }) ||
         canvas.getContext('experimental-webgl');
     } catch (e) { gl = null; }
     if (!gl) return;
@@ -310,6 +310,7 @@
     var mouse = { x: 0, y: 0, nx: 0, ny: 0, inside: false, sx: 0, sy: 0 };
     var scrollP = 0, visible = true, running = false, on = false, t0 = performance.now(), firstFrame = true;
     var heroH = heroSection.offsetHeight || 700;
+    var cssW = 0, cssH = 0, frames = 0, failed = false, dbg = null, debugOn = /[?&]3ddebug/.test(window.location.search);
 
     function resize() {
       var r = wrap.getBoundingClientRect();
@@ -317,7 +318,7 @@
       var w = Math.max(2, Math.round(r.width * dpr)), h = Math.max(2, Math.round(r.height * dpr));
       var cap = 2400000; if (w * h > cap) { var k = Math.sqrt(cap / (w * h)); w = Math.round(w * k); h = Math.round(h * k); }
       if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
-      W = w; H = h; aspect = w / h; heroH = heroSection.offsetHeight || heroH;
+      W = w; H = h; aspect = w / h; heroH = heroSection.offsetHeight || heroH; cssW = r.width; cssH = r.height;
     }
 
     function setOn(v) {
@@ -373,9 +374,42 @@
 
     var glassQueue = [];
 
+    function report(msg) {
+      if (!debugOn) return;
+      if (!dbg) {
+        dbg = doc.createElement('pre');
+        dbg.style.cssText = 'position:fixed;left:8px;bottom:8px;z-index:99999;margin:0;padding:8px 10px;background:#000c;color:#7fffd4;font:12px/1.4 monospace;max-width:92vw;white-space:pre-wrap';
+        doc.body.appendChild(dbg);
+      }
+      var info = '';
+      try {
+        var ext = gl.getExtension('WEBGL_debug_renderer_info');
+        info = (ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : gl.getParameter(gl.RENDERER)) + ' | ' + gl.getParameter(gl.VERSION) +
+          ' | depth ' + gl.getParameter(gl.DEPTH_BITS) + ' | err ' + gl.getError();
+      } catch (e) { info = 'no gl info'; }
+      dbg.textContent = '[3d] ' + msg + '\ncanvas ' + canvas.width + 'x' + canvas.height + ' css ' + Math.round(cssW) + 'x' + Math.round(cssH) +
+        ' frames ' + frames + '\n' + info;
+    }
+    function fail(msg) {
+      failed = true; on = false; running = false;
+      try { window.console && console.warn('[sa3d] fallback to photo: ' + msg); } catch (e) {}
+      wrap.classList.remove('sa-hero3d-wrap'); canvas.classList.remove('is-on'); canvas.style.display = 'none';
+      report('FALLBACK: ' + msg);
+    }
+    function isBlank() {
+      var buf = new Uint8Array(W * H * 4);
+      gl.readPixels(0, 0, W, H, gl.RGBA, gl.UNSIGNED_BYTE, buf);
+      for (var q = 3; q < buf.length; q += 64) if (buf[q] > 0) return false;
+      return true;
+    }
     function frame(now) {
+      try { frameInner(now); } catch (e) { fail('exception: ' + (e && e.message)); }
+    }
+    function frameInner(now) {
       running = false;
-      if (!on || !visible || doc.hidden) return;
+      if (failed || !on || !visible || doc.hidden) return;
+      var rr = wrap.getBoundingClientRect();
+      if (Math.abs(rr.width - cssW) > 1 || Math.abs(rr.height - cssH) > 1) resize();
       var t = (now - t0) / 1000;
       gl.viewport(0, 0, W, H);
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
@@ -479,6 +513,11 @@
       gl.enableVertexAttribArray(PA.seed); gl.vertexAttribPointer(PA.seed, 1, gl.FLOAT, false, 16, 12);
       gl.drawArrays(gl.POINTS, 0, PN);
 
+      frames++;
+      if (frames === 30 || frames === 150) {
+        if (isBlank()) { fail('canvas is blank after ' + frames + ' frames'); return; }
+        report('OK, drawing');
+      }
       if (firstFrame) { firstFrame = false; if (on) { canvas.classList.add('is-on'); wrap.classList.add('sa-hero3d-wrap'); } }
       running = true; window.requestAnimationFrame(frame);   // ambient float is always moving while the hero is in view
     }
