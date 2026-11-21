@@ -1,9 +1,10 @@
-/* Start-up Audit — Home "Inside the Business": an interactive 3D audit-dimension system.
-   Six glass modules orbit a central core and are wired to it. Hover or click a module (or pick it from the list)
-   and the camera glides in while the matching audit details appear.
+/* Start-up Audit — Home "Inside the Business": a scroll-driven 3D audit story.
+   The section is one pinned, full-width stage that continues the hero. Scrolling brings the six glass modules together;
+   a tap (or more scrolling) sends the first module to the left and its details appear on the right as HUD text; scrolling on
+   brings each next module up in the middle, slides it left, and so on through all six.
 
    Self-contained WebGL, no libraries and no network — the same approach as the hero (assets/js/hero3d.js).
-   The six dimensions live in the page as plain HTML, so the section still works when WebGL or JavaScript is unavailable.
+   The six dimensions live in the page as plain HTML, so the section still reads when WebGL or JavaScript is unavailable.
    Add ?3ddebug to the URL to log renderer info and quality changes to the console. */
 (function () {
   'use strict';
@@ -31,9 +32,9 @@
   function chain() { var m = ident(); for (var i = 0; i < arguments.length; i++) m = mul(m, arguments[i]); return m; }
   function xf(m, x, y, z) { return [m[0] * x + m[4] * y + m[8] * z + m[12], m[1] * x + m[5] * y + m[9] * z + m[13], m[2] * x + m[6] * y + m[10] * z + m[14]]; }
   function n3(m) { return new Float32Array([m[0], m[1], m[2], m[4], m[5], m[6], m[8], m[9], m[10]]); }
-  function perspective(fovy, asp, n, f, shift) {
+  function perspective(fovy, asp, n, f, sx, sy) {                       // sx / sy = lens shift (moves the picture sideways / up without turning the camera)
     var t = 1 / Math.tan(fovy / 2), m = new Float32Array(16);
-    m[0] = t / asp; m[5] = t; m[8] = shift || 0; m[10] = (f + n) / (n - f); m[11] = -1; m[14] = 2 * f * n / (n - f);
+    m[0] = t / asp; m[5] = t; m[8] = sx || 0; m[9] = sy || 0; m[10] = (f + n) / (n - f); m[11] = -1; m[14] = 2 * f * n / (n - f);
     return m;
   }
   function lookAt(e, c, u) {
@@ -194,62 +195,51 @@
     return o;
   }
 
-  /* ================================================================ UI (list, panel, selection) */
+  /* ================================================================ UI (stage text, hints, progress) */
   function initUI(host) {
-    var items = [].slice.call(host.querySelectorAll('.a3d-item'));
     var arts = [].slice.call(host.querySelectorAll('.a3d-art'));
-    var panel = host.querySelector('.a3d-panel');
-    var list = host.querySelector('.a3d-list');
-    var sel = -1, hover = -1, onSel = [], onHover = [];
+    var segs = [].slice.call(host.querySelectorAll('.a3d-rail i'));
+    var curEl = host.querySelector('[data-cur]');
+    var names = [].slice.call(host.querySelectorAll('.a3d-lbl')).map(function (l) { return l.getAttribute('data-name') || ''; });
+    var want = -2;
 
-    function setHover(i) {
-      if (i === hover) return;
-      hover = i;
-      items.forEach(function (b, k) { b.classList.toggle('is-hover', k === i); });
-      onHover.forEach(function (f) { f(i); });
+    function lock(a, on) {
+      if (on) { a.setAttribute('inert', ''); a.setAttribute('aria-hidden', 'true'); } else { a.removeAttribute('inert'); a.removeAttribute('aria-hidden'); }
     }
-    function select(i, fromGL) {
-      if (i === sel) return;
-      sel = i;
-      items.forEach(function (b, k) { b.setAttribute('aria-pressed', k === i ? 'true' : 'false'); });
-      arts.forEach(function (a) {
-        var on = +a.getAttribute('data-i') === i;
-        a.classList.toggle('is-active', on);
-        if (on) a.removeAttribute('inert'); else a.setAttribute('inert', '');
-        a.setAttribute('aria-hidden', on ? 'false' : 'true');
-      });
-      if (panel) panel.scrollTop = 0;
-      if (list && i >= 0 && list.scrollWidth > list.clientWidth + 2 && items[i]) {      // phone: keep the chosen tab in view without moving the page
-        var b = items[i];
-        list.scrollTo ? list.scrollTo({ left: b.offsetLeft - (list.clientWidth - b.offsetWidth) / 2, behavior: 'smooth' }) : (list.scrollLeft = b.offsetLeft - 16);
-      }
-      onSel.forEach(function (f) { f(i, !!fromGL); });
-    }
-
-    items.forEach(function (b, k) {
-      b.addEventListener('click', function () { select(sel === k ? -1 : k); });
-      b.addEventListener('mouseenter', function () { setHover(k); });
-      b.addEventListener('mouseleave', function () { setHover(-1); });
-      b.addEventListener('focus', function () { setHover(k); });
-      b.addEventListener('blur', function () { setHover(-1); });
-    });
-    [].forEach.call(host.querySelectorAll('[data-back]'), function (b) { b.addEventListener('click', function () { select(-1); }); });
-    host.addEventListener('keydown', function (e) { if (e.key === 'Escape' && sel >= 0) { select(-1); } });
-
-    host.classList.add('a3d--ready');
-    arts.forEach(function (a) { if (!a.classList.contains('is-active')) { a.setAttribute('inert', ''); a.setAttribute('aria-hidden', 'true'); } });
-
     return {
-      select: select, setHover: setHover, getSel: function () { return sel; },
-      onSelect: function (f) { onSel.push(f); }, onHover: function (f) { onHover.push(f); },
-      names: items.map(function (b) { return b.querySelector('span').textContent; })
+      names: names,
+      /* the immersive layout is only switched on once WebGL is confirmed: until then (and without it) the six dimensions are plain stacked cards */
+      enable: function () {
+        host.classList.remove('a3d--no3d'); host.classList.add('a3d--ready');
+        arts.forEach(function (a) { a.classList.remove('is-shown'); lock(a, true); });
+      },
+      disable: function () {
+        host.classList.remove('a3d--ready', 'is-focus', 'is-last', 'has-shown', 'is-formed'); host.classList.add('a3d--no3d');
+        arts.forEach(function (a) { a.classList.remove('is-shown'); lock(a, false); });
+      },
+      /* which stage the scroll position asks for (-1 = overview) */
+      setWant: function (i) {
+        if (i === want) return;
+        want = i;
+        host.classList.toggle('is-focus', i >= 0);
+        host.classList.toggle('is-last', i === arts.length - 1);
+        if (curEl && i >= 0) curEl.textContent = '0' + (i + 1);
+        segs.forEach(function (s, k) { s.classList.toggle('on', k <= i); s.classList.toggle('cur', k === i); });
+      },
+      /* which dimension's details are on screen (called by the scene once its module has slid into place) */
+      setShown: function (i) {
+        arts.forEach(function (a) {
+          var on = +a.getAttribute('data-i') === i;
+          a.classList.toggle('is-shown', on); lock(a, !on);
+        });
+        host.classList.toggle('has-shown', i >= 0);
+      }
     };
   }
 
   /* ================================================================ 3D scene */
   function initGL(host, ui) {
-    var stage = host.querySelector('.a3d-stage'), canvas = host.querySelector('.a3d-canvas'), tag = host.querySelector('.a3d-tag'), consoleEl = host.querySelector('.a3d-console');
-    var listEl = host.querySelector('.a3d-list'), panelEl = host.querySelector('.a3d-panel');
+    var stage = host.querySelector('.a3d-pin'), canvas = host.querySelector('.a3d-canvas');
     if (!stage || !canvas) return null;
 
     var gl = null;
@@ -399,10 +389,11 @@
     var N = DEFS.length, RAD = 1.95;
     var mods = DEFS.map(function (f, i) {
       var d = f(); d.a = i * Math.PI * 2 / N; d.name = ui.names[i] || '';
-      d.sc = 0; d.hv = 0; d.sl = 0; d.spin = i * 1.3; d.M = ident(); d.pos = [0, 0, 0]; d.al = 1; d.lal = 1; d.appear = 0;
+      d.sc = 0; d.hv = 0; d.sl = 0; d.spin = i * 1.3; d.M = ident(); d.pos = [0, 0, 0]; d.al = 1; d.lal = 1; d.appear = 0; d.vis = 1; d.fc = 0; d.on = false; d.vv = 1;
       d.plate = [segs(circleLines(.82, 6)), segs(circleLines(.56, 48))];
       return d;
     });
+
 
     /* core: the audit hub every dimension connects to */
     var coreIc = icosa(.64), coreOut = mesh(coreIc.mesh), coreOutL = segs(coreIc.lines), coreIn = mesh(icosa(.3).mesh), coreRing = segs(circleLines(.86, 64)), coreRing2 = segs(circleLines(1.02, 64));
@@ -413,105 +404,116 @@
     var dust = [], rd = rng(7), nd = lite ? 46 : 110, di;
     for (di = 0; di < nd; di++) dust.push({ x: (rd() - .5) * 11, y0: rd() * 5.6, z: (rd() - .5) * 8 - .5, vy: .05 + rd() * .1, s: .03 + rd() * .06, ph: rd() * 6.28, c: rd() > .6 ? WHITE : TEAL_HI });
 
-    /* ---------- state ---------- */
-    var st = { t: 2, intro: 0, introOn: false, yaw: 0, yawV: 0, focus: 0, sel: -1, hov: -1, drag: false, dragMoved: false, lastX: 0, lastT: 0,
-      mx: 0, my: 0, px: 0, py: 0, sp: 0, visible: false, dirty: true, q: 1, W: 1, H: 1, shift: 0, ptr: null };
+    /* ---------- state ----------
+       want  = the stage the scroll position asks for (-1 = overview of all six, 0..5 = one dimension)
+       cur   = the module that is actually on stage right now (it can lag behind `want` while one leaves and the next arrives)
+       shx/shy = where the structure sits on screen (lens shift): overview -> middle -> side (left on desktop, top on phones) */
+    var st = { t: 2, intro: 0, introT: 0, introOn: false, yaw: 0, yawV: 0, f: 0, want: -1, cur: -1, shown: -1, fromStage: false, formed: false, hov: -1, pulse: -9,
+      mx: 0, my: 0, px: 0, py: 0, ride: 0, rideT: 0, shx: 0, shy: 0, visible: false, dirty: true, q: 1, W: 1, H: 1, wide: true, ptr: null, lbl: false };
     var scr = mods.map(function () { return { x: 0, y: 0, r: 0, z: 0 }; });
     var camEye = [0, 2, 9], camTgt = [0, 0, 0];
     var rate = function (dt, r) { return still ? 1 : 1 - Math.exp(-dt * r); };
-
-    ui.onSelect(function (i) { st.sel = i; st.dirty = true; });
-    ui.onHover(function (i) { st.hov = i; st.dirty = true; });
+    var labelsEl = host.querySelector('.a3d-labels'), lbls = [].slice.call(host.querySelectorAll('.a3d-lbl'));
+    function slot(n) {
+      if (st.wide) return n === 'ov' ? [.30, 0] : n === 'mid' ? [0, 0] : [-.42, 0];
+      return n === 'ov' ? [0, -.27] : n === 'mid' ? [0, -.02] : [0, .45];
+    }
+    function away(a) { return Math.abs(st.shx - a[0]) + Math.abs(st.shy - a[1]); }
+    (function () { var s0 = slot('ov'); st.shx = s0[0]; st.shy = s0[1]; })();
 
     /* ---------- sizing ---------- */
     function resize() {
       var cw = Math.max(1, stage.clientWidth), ch = Math.max(1, stage.clientHeight), dpr = Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2) * st.q;
-      canvas.width = Math.max(2, Math.round(cw * dpr)); canvas.height = Math.max(2, Math.round(ch * dpr));
-      st.W = cw; st.H = ch; st.dirty = true;
-      /* centre the structure in the free area between the list and the details panel (desktop only) */
-      var sh = 0, wide = mq('(min-width: 1024px)');
-      if (wide && listEl && panelEl) {
-        var sr = stage.getBoundingClientRect(), lr = listEl.getBoundingClientRect(), pr = panelEl.getBoundingClientRect();
-        var c = ((lr.right + pr.left) / 2 - sr.left), free = Math.max(200, pr.left - lr.right);
-        sh = (c - cw / 2) / (cw / 2);
-        st.free = free / ch;
-      } else { st.free = cw / ch; }
-      st.shift = sh;
+      var w = Math.max(2, Math.round(cw * dpr)), h = Math.max(2, Math.round(ch * dpr));
+      var cap = lite ? 1300000 : 2600000; if (w * h > cap) { var kk = Math.sqrt(cap / (w * h)); w = Math.round(w * kk); h = Math.round(h * kk); }
+      if (canvas.width !== w || canvas.height !== h) { canvas.width = w; canvas.height = h; }
+      var wasWide = st.wide;
+      st.W = cw; st.H = ch; st.wide = cw >= 860 && cw / ch >= 1.15; st.dirty = true;
+      host.classList.toggle('a3d--tall', !st.wide);
+      if (wasWide !== st.wide) { var s1 = slot(st.want < 0 ? 'ov' : (st.shown >= 0 ? 'side' : 'mid')); st.shx = s1[0]; st.shy = s1[1]; }
     }
     if (window.ResizeObserver) new ResizeObserver(resize).observe(stage); else window.addEventListener('resize', resize);
     resize();
 
-    /* ---------- pointer ---------- */
+    /* ---------- pointer: a light parallax and a hover highlight on the overview (the scroll drives everything else) ---------- */
+    function setHover(i) {
+      if (i === st.hov) return;
+      st.hov = i; lbls.forEach(function (l, k) { l.classList.toggle('is-hover', k === i); }); st.dirty = true;
+    }
     function hitTest(px, py) {
       var best = -1, bz = 1e9, k;
       for (k = 0; k < N; k++) {
-        if (mods[k].appear < .6) continue;
+        if (!mods[k].on) continue;
         var s = scr[k], d = Math.hypot(px - s.x, py - s.y);
         if (d < s.r * 1.05 && s.z < bz) { bz = s.z; best = k; }
       }
       return best;
     }
-    function localXY(e) { var r = canvas.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; }
-    canvas.addEventListener('pointerdown', function (e) {
-      if (e.pointerType === 'mouse' && e.button !== 0) return;
-      st.drag = true; st.dragMoved = false; st.lastX = e.clientX; st.lastT = performance.now(); st.downX = e.clientX; st.downY = e.clientY;
-      try { canvas.setPointerCapture(e.pointerId); } catch (x) { /* ignore */ }
+    stage.addEventListener('pointermove', function (e) {
+      if (e.pointerType !== 'mouse') return;
+      var r = stage.getBoundingClientRect(), x = e.clientX - r.left, y = e.clientY - r.top;
+      st.ptr = [x, y]; st.mx = (x / st.W - .5) * 2; st.my = (y / st.H - .5) * 2; st.dirty = true;
     });
-    canvas.addEventListener('pointermove', function (e) {
-      var p = localXY(e);
-      if (e.pointerType === 'mouse') { st.ptr = p; st.mx = (p[0] / st.W - .5) * 2; st.my = (p[1] / st.H - .5) * 2; }
-      if (st.drag) {
-        var dx = e.clientX - st.lastX, now = performance.now();
-        if (Math.abs(e.clientX - st.downX) > 6) st.dragMoved = true;
-        if (st.dragMoved) { st.yaw += dx * .0065; st.yawV = clamp(dx * .0065 / Math.max(.008, (now - st.lastT) / 1000), -2.2, 2.2); }
-        st.lastX = e.clientX; st.lastT = now;
-      }
-      st.dirty = true;
-    });
-    function endDrag(e) {
-      if (!st.drag) return;
-      st.drag = false;
-      try { canvas.releasePointerCapture(e.pointerId); } catch (x) { /* ignore */ }
-      if (!st.dragMoved && e.type === 'pointerup') {
-        var p = localXY(e), h = hitTest(p[0], p[1]);
-        if (h >= 0) ui.select(st.sel === h ? -1 : h, true);
-        else if (e.pointerType === 'mouse' && st.sel >= 0) ui.select(-1, true);
-      }
-      st.dirty = true;
-    }
-    canvas.addEventListener('pointerup', endDrag); canvas.addEventListener('pointercancel', endDrag);
-    canvas.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse' && !st.drag) { st.ptr = null; ui.setHover(-1); } });
+    stage.addEventListener('pointerleave', function () { st.ptr = null; st.mx = 0; st.my = 0; setHover(-1); });
 
     /* ---------- update ---------- */
     var fpsAcc = 0, fpsN = 0, slow = 0;
     function update(dt) {
       if (!still) st.t += dt;
-      if (st.introOn && st.intro < 1) st.intro = still ? 1 : Math.min(1, st.intro + dt / 3.6);
-      var it = st.intro * 3.6;
-      var ft = st.sel >= 0 ? 1 : 0;
-      st.focus += (ft - st.focus) * rate(dt, 2.6);
-      if (Math.abs(ft - st.focus) < .0005) st.focus = ft;
+      var dI = st.introT - st.intro;
+      st.intro = (still || Math.abs(dI) < .0008) ? st.introT : st.intro + dI * rate(dt, 3.2);
+      st.ride += (st.rideT - st.ride) * rate(dt, 3);
+      var it = st.intro * 3.6, want = st.want, k, m;
+      var ov = slot('ov'), mid = slot('mid'), side = slot('side');
 
-      if (st.drag) { /* yaw driven by the pointer */ }
-      else if (st.sel >= 0) { var d = wrap(-mods[st.sel].a - st.yaw); st.yaw += d * rate(dt, 3.2); st.yawV = 0; }
-      else if (!still) {
+      /* which module is on stage: the current one leaves first (shrinks away, or glides back into the ring), then the requested one arrives in the middle */
+      var cur = st.cur;
+      if (cur >= 0 && want !== cur) {
+        if (st.shown >= 0) { st.shown = -1; ui.setShown(-1); }
+        var mc = mods[cur];
+        if (want >= 0) { st.fromStage = true; if (mc.vis < .06 && away(mid) < .05) { st.cur = cur = -1; } }
+        else if (mc.fc < .06) { st.cur = cur = -1; }
+      }
+      if (cur < 0 && want >= 0) {
+        st.cur = cur = want;
+        if (st.fromStage) { mods[want].fc = 1; mods[want].vis = 0; }          // arrives from nothing, in the middle of the screen
+        st.fromStage = false;
+      }
+
+      /* where the structure sits on screen */
+      var tgt = want < 0 ? ov : (cur === want && mods[cur].fc > .93 && mods[cur].vis > .85 ? side : mid);
+      st.shx += (tgt[0] - st.shx) * rate(dt, 2.7); st.shy += (tgt[1] - st.shy) * rate(dt, 2.7);
+      if (cur >= 0 && want === cur && st.shown !== cur) {                        // details appear once the module has slid most of the way to its side
+        var span = Math.abs(side[0] - mid[0]) + Math.abs(side[1] - mid[1]), done = 1 - away(side) / Math.max(span, .01);
+        if (done > .74 || still) { st.shown = cur; ui.setShown(cur); }
+      }
+      st.f += ((want >= 0 ? 1 : 0) - st.f) * rate(dt, 3);
+
+      if (want < 0 && !still) {                                                   // the whole structure turns slowly in the overview
         var auto = .2 * clamp((it - 1.8) / 1.2, 0, 1);
         st.yawV += (auto - st.yawV) * rate(dt, 1.4); st.yaw += st.yawV * dt;
-      }
+      } else st.yawV += (0 - st.yawV) * rate(dt, 3);
       st.px += (st.mx - st.px) * rate(dt, 2.4); st.py += (st.my - st.py) * rate(dt, 2.4);
 
-      var k;
       for (k = 0; k < N; k++) {
-        var m = mods[k];
+        m = mods[k];
+        var tv, tf;
+        if (k === cur) { if (want === k) { tv = 1; tf = 1; } else if (want < 0) { tv = 1; tf = 0; } else { tv = 0; tf = 1; } }
+        else { tv = want < 0 ? 1 : 0; tf = 0; }
+        m.vis += (tv - m.vis) * rate(dt, tv ? 4.2 : 6.5); m.fc += (tf - m.fc) * rate(dt, 3.2);
+        if (Math.abs(tv - m.vis) < .002) m.vis = tv;
+        if (Math.abs(tf - m.fc) < .002) m.fc = tf;
         m.p = clamp((it - .5 - k * .2) / 1.2, 0, 1);
         m.appear = easeOut(m.p);
-        m.hv += ((st.hov === k ? 1 : 0) - m.hv) * rate(dt, 9);
-        m.sl += ((st.sel === k ? 1 : 0) - m.sl) * rate(dt, 4.5);
+        m.hv += ((st.hov === k && st.f < .2 ? 1 : 0) - m.hv) * rate(dt, 9);
         if (!still) {
-          if (m.sl > .02) { var tgt = .42 + .22 * Math.sin(st.t * .6), dd = wrap(tgt - m.spin); m.spin += dd * rate(dt, 4) * m.sl; }
+          if (m.fc > .5) { var tg = .35 + .55 * Math.sin(st.t * .42), dd = wrap(tg - m.spin); m.spin += dd * rate(dt, 3); }   // on stage: a slow 3/4 sweep so every face is seen
           else m.spin += dt * (.5 + m.hv * .5);
         } else m.spin = .42;
       }
+      var formed = st.intro > .97;
+      if (formed !== st.formed) { st.formed = formed; host.classList.toggle('is-formed', formed); }
+
       /* adaptive quality: step the render resolution down if the device can't hold ~40fps */
       if (!still && st.introOn) {
         fpsAcc += dt; fpsN++;
@@ -524,40 +526,42 @@
     }
 
     /* ---------- draw ---------- */
-    var VP, VIEW, vpScratch;
+    var VP, VIEW;
     function draw() {
       var W = canvas.width, H = canvas.height, t = st.t, it = st.intro * 3.6;
       gl.viewport(0, 0, W, H);
       gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
       gl.enable(gl.BLEND); gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.enable(gl.DEPTH_TEST); gl.disable(gl.CULL_FACE); gl.depthFunc(gl.LEQUAL);
 
-      /* camera: wide overview -> close focus on the selected module, with pointer + scroll parallax */
-      var asp = st.W / st.H, fov = 38 * Math.PI / 180, th = Math.tan(fov / 2), eff = clamp(st.free || asp, .5, 2.2);
-      var over = clamp((st.W < 700 ? 3.5 : 3.05) / (th * eff), 7.6, 13.5), foc = Math.max(5.7, 1.6 / (th * eff));
-      var f = easeInOut(st.focus), io = 1 - easeOut(clamp(st.intro, 0, 1));
-      var par = still ? 0 : 1;
-      camEye[0] = lerp(0, 0, f) + st.px * .55 * (1 - .45 * f) * par;
-      camEye[1] = lerp(2.15, .85, f) - st.py * .28 * par + st.sp * .55 * par + io * 1.7;
-      camEye[2] = lerp(over, RAD + foc, f) + io * 6;
-      camTgt[0] = 0; camTgt[1] = lerp(-.1, .05, f); camTgt[2] = lerp(0, RAD * .72, f);
+      /* camera: wide overview -> a closer, steadier shot while one module is on stage; the lens shift slides the subject to its side of the screen */
+      var asp = st.W / st.H, fov = (st.wide ? 38 : 50) * Math.PI / 180, th = Math.tan(fov / 2);
+      var over = st.wide ? clamp(3.3 / (.7 * th * Math.min(asp, 2.4)) * 1.08, 8.4, 16) : clamp(3.25 / (th * asp) * 1.06, 9, 20);
+      var foc = st.wide ? clamp(8.4 + (1.6 - Math.min(asp, 1.6)) * 3, 7.6, 11.5) : clamp(2.4 / (th * asp) + 1.5, 9, 17);
+      var f = easeInOut(st.f), io = 1 - easeOut(clamp(st.intro, 0, 1)), par = still ? 0 : 1;
+      camEye[0] = st.px * .55 * (1 - .45 * f) * par;
+      camEye[1] = lerp(2.15, .9, f) - st.py * .28 * par + st.ride * .45 * (1 - f) + io * 1.7;
+      camEye[2] = lerp(over - st.ride * .7, foc, f) + io * 6;
+      camTgt[0] = 0; camTgt[1] = lerp(-.1, 0, f); camTgt[2] = 0;
       VIEW = lookAt(camEye, camTgt, [0, 1, 0]);
-      var proj = perspective(fov, asp, .1, 80, -st.shift);
+      var proj = perspective(fov, asp, .1, 80, -st.shx, -st.shy);
       VP = mul(proj, VIEW);
       var right = [VIEW[0], VIEW[4], VIEW[8]], up = [VIEW[1], VIEW[5], VIEW[9]];
-      var FOG = 34, k, p, i;
+      var FOG = 34, k, p, i, FS = st.wide ? 1.85 : 1.5;
 
-      /* modules */
-      var yaw = st.yaw + (1 - easeOut(clamp(st.intro, 0, 1))) * -2.8, anySel = st.sel >= 0;
+      /* modules: each sits in the ring, or (when on stage) glides to the middle and grows */
+      var yaw = st.yaw + (1 - easeOut(clamp(st.intro, 0, 1))) * -2.8;
       var order = [];
       for (k = 0; k < N; k++) {
-        var m = mods[k], rr = RAD * easeBack(m.p) + .2 * m.sl, ang = m.a + yaw;
-        var bob = still ? 0 : Math.sin(t * .9 + k * 1.7) * .09;
-        var sc = m.appear * (1 + .12 * m.hv + .2 * m.sl);
-        m.pos = [Math.sin(ang) * rr, m.y * .9 + bob, Math.cos(ang) * rr];
-        m.scl = Math.max(sc, .0001);
+        var m = mods[k], e = easeInOut(clamp(m.fc, 0, 1)), rr = RAD * easeBack(m.p), ang = m.a + yaw;
+        var bob = still ? 0 : Math.sin(t * .9 + k * 1.7) * .09, vv = easeOut(clamp(m.vis, 0, 1));
+        var ox = Math.sin(ang) * rr, oy = m.y * .9 + bob, oz = Math.cos(ang) * rr;
+        var sc = m.appear * vv * lerp(1 + .12 * m.hv, FS, e);
+        m.pos = [lerp(ox, 0, e), lerp(oy, m.y * .45 + bob * .5, e), lerp(oz, 0, e)];
+        m.scl = Math.max(sc, .0001); m.vv = vv; m.on = m.appear > .02 && vv > .02;
         m.M = chain(T(m.pos[0], m.pos[1], m.pos[2]), RY(m.spin), S(m.scl));
-        m.al = m.appear * (1 - (anySel ? .6 * f * (1 - m.sl) : 0));
-        m.lal = m.appear * (.62 + .38 * Math.max(m.sl, m.hv)) * (1 - (anySel ? .45 * f * (1 - m.sl) : 0));
+        m.sl = e * vv;
+        m.al = m.appear * vv;
+        m.lal = m.appear * vv * (.62 + .38 * Math.max(m.sl, m.hv));
         var c4 = xf(VP, m.pos[0], m.pos[1], m.pos[2]), w4 = VP[3] * m.pos[0] + VP[7] * m.pos[1] + VP[11] * m.pos[2] + VP[15];
         var dist = Math.hypot(camEye[0] - m.pos[0], camEye[1] - m.pos[1], camEye[2] - m.pos[2]);
         scr[k].x = (c4[0] / w4 * .5 + .5) * st.W; scr[k].y = (1 - (c4[1] / w4 * .5 + .5)) * st.H;
@@ -565,7 +569,7 @@
         order.push(k);
       }
       order.sort(function (a, b) { return scr[b].z - scr[a].z; });
-      var core = { M: chain(RY(t * .25), RX(t * .12), S(1 + .03 * Math.sin(t * 2))), al: clamp(it / .8, 0, 1) * (1 - .6 * f) };
+      var core = { M: chain(RY(t * .25), RX(t * .12), S(1 + .03 * Math.sin(t * 2))), al: clamp(it / .8, 0, 1) * (1 - f) };
       var pulse = .5 + .5 * Math.sin(t * 2.2);
 
       /* ---- pass 1: opaque cores (write depth) ---- */
@@ -581,15 +585,15 @@
       gl.depthMask(true);
       if (core.al > .01) drawMesh(coreIn, chain(core.M, S(.9 + .1 * pulse)), TEAL_HI, 1, .75 + .4 * pulse, 1);
       for (k = 0; k < N; k++) {
-        var mo = mods[k]; if (mo.appear < .02) continue;
-        for (i = 0; i < mo.solids.length; i++) { p = mo.solids[i]; drawMesh(p.g, chain(mo.M, p.m(t)), p.c, 1, p.gl * (.7 + .2 * mo.hv + .2 * mo.sl) * (.4 + .6 * mo.al), 1 + .2 * mo.hv + .3 * mo.sl); }
+        var mo = mods[k]; if (!mo.on) continue;
+        for (i = 0; i < mo.solids.length; i++) { p = mo.solids[i]; drawMesh(p.g, chain(mo.M, p.m(t)), p.c, 1, p.gl * (.7 + .2 * mo.hv + .5 * mo.sl) * (.4 + .6 * mo.al), 1 + .2 * mo.hv + .3 * mo.sl); }
       }
 
       /* ---- pass 2: glass (far to near, no depth write) ---- */
       gl.depthMask(false);
       if (core.al > .01) drawMesh(coreOut, core.M, TEAL, .62 * core.al, 0, 1.1);
       for (var oi = 0; oi < N; oi++) {
-        var mg = mods[order[oi]]; if (mg.appear < .02) continue;
+        var mg = mods[order[oi]]; if (!mg.on) continue;
         for (i = 0; i < mg.glass.length; i++) { p = mg.glass[i]; drawMesh(p.g, chain(mg.M, p.m(t)), p.c, p.a * mg.al, .05 * mg.sl + .04 * mg.hv, 1 + .25 * mg.hv + .3 * mg.sl); }
       }
 
@@ -602,13 +606,15 @@
         gl.uniformMatrix4fv(PL.u.uM, false, M); gl.uniform4f(PL.u.uCol, c[0], c[1], c[2], a);
         gl.bindBuffer(gl.ARRAY_BUFFER, L.b); gl.vertexAttribPointer(PL.a.aPos, 3, gl.FLOAT, false, 0, 0); gl.drawArrays(gl.LINES, 0, L.n);
       }
-      var I4 = ident(), vis = clamp(it / 1.2, 0, 1);
-      /* floor grid + expanding scan ring */
-      for (i = 0; i < floorRings.length; i++) drawLines(floorRings[i], chain(T(0, FLOOR_Y, 0), RX(HALF)), TEAL_HI, (.34 - i * .06) * vis);
+      var I4 = ident(), vis = clamp(it / 1.2, 0, 1), fy = FLOOR_Y - .55 * f;
+      /* floor grid + expanding scan ring (and a burst of it whenever the screen is tapped) */
+      for (i = 0; i < floorRings.length; i++) drawLines(floorRings[i], chain(T(0, fy, 0), RX(HALF)), TEAL_HI, (.34 - i * .06) * vis * (1 + .6 * f));
       var sc0 = still ? .55 : (t % 5) / 5;
-      drawLines(floorRings[0], chain(T(0, FLOOR_Y, 0), RX(HALF), S(.4 + sc0 * 3.9)), AQUA, (1 - sc0) * .7 * vis * (still ? 0 : 1));
-      drawLines(ringOrbit, I4, TEAL_HI, .5 * vis);
-      drawLines(ticks, RY(yaw), MIST, .5 * vis);
+      drawLines(floorRings[0], chain(T(0, fy, 0), RX(HALF), S(.4 + sc0 * 3.9)), AQUA, (1 - sc0) * .7 * vis * (still ? 0 : 1));
+      var pu = (t - st.pulse) / 1.3;
+      if (pu >= 0 && pu < 1 && !still) drawLines(floorRings[0], chain(T(0, fy, 0), RX(HALF), S(.5 + easeOut(pu) * 4.6)), WHITE, (1 - pu) * .85);
+      drawLines(ringOrbit, I4, TEAL_HI, .5 * vis * (1 - f));
+      drawLines(ticks, RY(yaw), MIST, .5 * vis * (1 - f));
       /* core detail */
       if (core.al > .01) {
         drawLines(coreOutL, core.M, WHITE, .7 * core.al);
@@ -617,17 +623,17 @@
       }
       /* module lines + plates */
       for (k = 0; k < N; k++) {
-        var ml = mods[k]; if (ml.appear < .02) continue;
+        var ml = mods[k]; if (!ml.on) continue;
         for (i = 0; i < ml.lines.length; i++) { p = ml.lines[i]; drawLines(p.l, chain(ml.M, p.m(t)), p.c, p.a * ml.lal); }
         var pm = chain(ml.M, T(0, -.72, 0), RX(HALF), RZ(Math.PI / 6));
         drawLines(ml.plate[0], pm, ml.acc, (.5 + .4 * ml.sl + .25 * ml.hv) * ml.lal); drawLines(ml.plate[1], pm, ml.acc, .28 * ml.lal);
       }
-      /* connections: spokes to the core + links between neighbouring modules */
-      var dyn = [], sdyn = [], ldyn = [], a1, b1;
+      /* connections: spokes to the core + links between neighbouring modules (overview only) */
+      var dyn = [], sdyn = [], ldyn = [];
       for (k = 0; k < N; k++) {
-        var mc = mods[k], arr = (k === st.sel || k === st.hov) ? sdyn : dyn;
-        arr.push(0, 0, 0, mc.pos[0], mc.pos[1] + .0, mc.pos[2]);
-        var nx = mods[(k + 1) % N]; ldyn.push(mc.pos[0], mc.pos[1], mc.pos[2], nx.pos[0], nx.pos[1], nx.pos[2]);
+        var mc2 = mods[k], arr = (k === st.hov) ? sdyn : dyn;
+        arr.push(0, 0, 0, mc2.pos[0], mc2.pos[1], mc2.pos[2]);
+        var nx = mods[(k + 1) % N]; ldyn.push(mc2.pos[0], mc2.pos[1], mc2.pos[2], nx.pos[0], nx.pos[1], nx.pos[2]);
       }
       function drawDyn(arr, c, a) {
         if (!arr.length || a <= .004) return;
@@ -635,27 +641,27 @@
         gl.bindBuffer(gl.ARRAY_BUFFER, dynLines); gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(arr), gl.DYNAMIC_DRAW);
         gl.vertexAttribPointer(PL.a.aPos, 3, gl.FLOAT, false, 0, 0); gl.drawArrays(gl.LINES, 0, arr.length / 3);
       }
-      var conn = clamp((it - 1.1) / 1.4, 0, 1);
-      drawDyn(dyn, TEAL_HI, .42 * conn * (1 - .35 * f)); drawDyn(ldyn, MIST, .26 * conn * (1 - .3 * f)); drawDyn(sdyn, AQUA, .95 * conn);
+      var conn = clamp((it - 1.1) / 1.4, 0, 1) * (1 - f);
+      drawDyn(dyn, TEAL_HI, .42 * conn); drawDyn(ldyn, MIST, .26 * conn); drawDyn(sdyn, AQUA, .95 * conn);
 
       /* ---- pass 4: glow sprites, data packets, dust (additive) ---- */
       sprN = 0;
       spr(0, 0, 0, 3.4 * core.al, TEAL, (.5 + .15 * pulse) * core.al);
       spr(0, 0, 0, 1.3 * core.al, AQUA, .4 * core.al);
       for (k = 0; k < N; k++) {
-        var ms = mods[k]; if (ms.appear < .02) continue;
-        var gA = ms.al * (.18 + .2 * ms.sl + .14 * ms.hv);
-        spr(ms.pos[0], ms.pos[1], ms.pos[2], (1.5 + .9 * ms.sl) * ms.appear, ms.acc, gA);
-        if (ms.sl > .02) spr(ms.pos[0], ms.pos[1], ms.pos[2], 2.7 * ms.sl, TEAL, .22 * ms.sl);
+        var ms = mods[k]; if (!ms.on) continue;
+        var gA = ms.al * (.18 + .3 * ms.sl + .14 * ms.hv);
+        spr(ms.pos[0], ms.pos[1], ms.pos[2], (1.5 + 1.6 * ms.sl) * ms.appear * ms.vv, ms.acc, gA);
+        if (ms.sl > .02) spr(ms.pos[0], ms.pos[1], ms.pos[2], 3.4 * ms.sl, TEAL, .24 * ms.sl);
         if (ms.sprites) {
           var sp = ms.sprites(t);
           for (i = 0; i < sp.length; i++) { var w = xf(ms.M, sp[i][0], sp[i][1], sp[i][2]); spr(w[0], w[1], w[2], sp[i][3] * ms.scl * .95, sp[i][4], sp[i][5] * ms.al); }
         }
         /* data packets running along the spoke */
-        var np = (k === st.sel ? 4 : 2) * (still ? 0 : 1), spd = k === st.sel ? .55 : .26;
+        var np = 2 * (still ? 0 : 1), spd = .26;
         for (i = 0; i < np; i++) {
-          var u = ((t * spd + k * .37 + i / np) % 1), dir = i % 2 ? 1 - u : u, e = easeOut(clamp(conn, 0, 1));
-          spr(ms.pos[0] * dir, ms.pos[1] * dir, ms.pos[2] * dir, .08 + (k === st.sel ? .05 : 0), i % 2 ? WHITE : AQUA, .85 * conn * e * (.4 + .6 * Math.sin(u * Math.PI)));
+          var u = ((t * spd + k * .37 + i / np) % 1), dir = i % 2 ? 1 - u : u, e2 = easeOut(clamp(conn, 0, 1));
+          spr(ms.pos[0] * dir, ms.pos[1] * dir, ms.pos[2] * dir, .08, i % 2 ? WHITE : AQUA, .85 * conn * e2 * (.4 + .6 * Math.sin(u * Math.PI)));
         }
       }
       for (i = 0; i < dust.length; i++) {
@@ -669,22 +675,17 @@
       gl.vertexAttribPointer(PS.a.aSize, 1, gl.FLOAT, false, 40, 20); gl.vertexAttribPointer(PS.a.aCol, 4, gl.FLOAT, false, 40, 24);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sprIdx); gl.drawElements(gl.TRIANGLES, sprN * 6, gl.UNSIGNED_SHORT, 0);
       gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); gl.depthMask(true);
-      blendReset();
 
-      /* label that follows the hovered / selected module */
-      var show = st.hov >= 0 ? st.hov : st.sel;
-      if (tag) {
-        if (show >= 0 && mods[show].appear > .85) {
-          var s = scr[show];
-          if (tag._k !== show) { tag.textContent = mods[show].name; tag._k = show; }
-          var tw = tag.offsetWidth || 160, tx = clamp(s.x, tw / 2 + 10, st.W - tw / 2 - 10), ty = Math.max(s.y - s.r - 12, 66);
-          tag.style.transform = 'translate(' + Math.round(tx) + 'px,' + Math.round(ty) + 'px) translate(-50%,-100%)';
-          tag.classList.add('is-on');
-        } else tag.classList.remove('is-on');
+      /* numbered labels under each module while the whole structure is on show */
+      var showLbl = st.want < 0 && st.f < .08 && it > 3;
+      if (showLbl !== st.lbl) { st.lbl = showLbl; if (labelsEl) labelsEl.classList.toggle('is-on', showLbl); }
+      if (showLbl) {
+        for (k = 0; k < N; k++) {
+          var s = scr[k], lx = clamp(s.x, 70, st.W - 70), ly = Math.min(s.y + s.r + 4, st.H - 64);
+          lbls[k].style.transform = 'translate(' + Math.round(lx) + 'px,' + Math.round(ly) + 'px) translate(-50%,0)';
+        }
       }
-      canvas.style.cursor = st.drag && st.dragMoved ? 'grabbing' : (st.hov >= 0 ? 'pointer' : 'grab');
     }
-    function blendReset() { gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA); }
 
     /* ---------- loop ---------- */
     var raf = 0, last = 0;
@@ -692,13 +693,10 @@
       raf = requestAnimationFrame(frame);
       var dt = Math.min(.05, Math.max(0, (now - last) / 1000)); last = now;
       still = reduce();
-      /* hover from the pointer while the scene moves underneath it */
-      if (st.ptr && !st.drag) {
+      if (st.ptr && st.f < .15) {                                              // hover highlight while the structure moves underneath the pointer
         var h = hitTest(st.ptr[0], st.ptr[1]);
-        if (h !== st.hov) ui.setHover(h);
-      }
-      var sr = stage.getBoundingClientRect();
-      st.sp = clamp(((sr.top + sr.height / 2) - window.innerHeight / 2) / window.innerHeight, -1, 1);
+        if (h !== st.hov) setHover(h);
+      } else if (st.hov >= 0) setHover(-1);
       update(dt);
       if (still && !st.dirty) return;
       draw(); st.dirty = false;
@@ -706,38 +704,92 @@
     function run() { if (!raf && st.visible && !doc.hidden && !lost) { last = performance.now(); raf = requestAnimationFrame(frame); } }
     function halt() { if (raf) { cancelAnimationFrame(raf); raf = 0; } }
     var lost = false;
-    canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); lost = true; halt(); host.classList.add('a3d--no3d'); });
+    canvas.addEventListener('webglcontextlost', function (e) { e.preventDefault(); lost = true; halt(); ui.disable(); });
     doc.addEventListener('visibilitychange', function () { if (doc.hidden) halt(); else run(); });
     if (DEBUG) console.log('[audit3d] ready', gl.getParameter(gl.RENDERER), 'lite=' + lite, 'still=' + still);
 
     return {
       setVisible: function (v) { st.visible = v; if (v) { st.dirty = true; run(); } else halt(); },
       start: function () {
-        if (st.introOn) return; st.introOn = true; st.intro = still ? 1 : 0; st.dirty = true; canvas.classList.add('is-on'); resize(); run();
+        if (st.introOn) return; st.introOn = true; st.dirty = true; canvas.classList.add('is-on'); resize(); run();
       },
+      /* targets from the scroll controller */
+      set: function (o) {
+        if (o.want !== undefined) st.want = o.want;
+        if (o.intro !== undefined) st.introT = o.intro;
+        if (o.ride !== undefined) st.rideT = o.ride;
+        st.dirty = true; run();
+      },
+      pulse: function () { st.pulse = st.t; st.dirty = true; },
       _state: st, _scr: scr
     };
   }
 
-  /* ================================================================ boot */
+  /* ================================================================ boot: scroll story */
   function boot() {
     var host = doc.querySelector('[data-a3d]');
     if (!host) return;
+    var track = host.querySelector('.a3d-track'), pin = host.querySelector('.a3d-pin');
+    if (!track || !pin) return;
     var ui = initUI(host), scene = null;
     try { scene = initGL(host, ui); } catch (e) { scene = null; if (DEBUG) console.warn('[audit3d]', e); }
-    if (!scene) host.classList.add('a3d--no3d');
-    var consoleEl = host.querySelector('.a3d-console'), started = false;
+    if (!scene) { host.classList.add('a3d--no3d'); return; }                 // plain stacked cards
+    ui.enable();
+    window.__audit3d = scene;                                                  // handy for debugging in the console
 
-    function begin() { if (started) return; started = true; consoleEl.classList.add('is-in'); if (scene) scene.start(); }
-    if (!('IntersectionObserver' in window)) { begin(); if (scene) scene.setVisible(true); return; }
-    var io = new IntersectionObserver(function (entries) {
-      entries.forEach(function (en) {
-        if (scene) scene.setVisible(en.isIntersecting);
-        if (en.isIntersecting && en.intersectionRatio >= .3) begin();
-      });
-    }, { rootMargin: '120px 0px', threshold: [0, .3] });
-    io.observe(consoleEl);
-    window.__audit3d = scene;                                    // handy for debugging in the console
+    /* scroll position -> story position `ps`, in units of one screen of the pinned stage:
+         -0.25 .. 0.65   the six shapes assemble        1.0 + 0.8*i .. +0.8   stage i (0..5) is on stage       6.0   the stage lets go */
+    var START = 1, LEN = .8, top = 0, ph = 1, stageIdx = -1, qd = 0;
+    function metrics() { top = parseFloat(getComputedStyle(pin).top) || 0; ph = pin.offsetHeight || 1; }
+    function pickStage(ps, prev) {
+      var raw = ps < START ? -1 : Math.min(5, Math.floor((ps - START) / LEN));
+      if (raw === prev || Math.abs(raw - prev) > 1) return raw;
+      var db = .04;                                                            // a little hysteresis so a nudge at a boundary doesn't flicker
+      if (raw > prev) return ps > START + (prev + 1) * LEN + db ? raw : prev;
+      return ps < START + prev * LEN - db ? raw : prev;
+    }
+    function apply() {
+      qd = 0;
+      var ps = (top - track.getBoundingClientRect().top) / ph;
+      stageIdx = pickStage(ps, stageIdx);
+      scene.set({ want: stageIdx, intro: clamp((ps + .25) / .9, 0, 1), ride: clamp(ps, 0, 1) });
+      ui.setWant(stageIdx);
+    }
+    function onScroll() { if (!qd) qd = requestAnimationFrame(apply); }
+    function scrollToPs(ps) {
+      var y = window.scrollY + track.getBoundingClientRect().top - top + ps * ph;
+      var calm = mq('(prefers-reduced-motion: reduce)') && !root.classList.contains('sa-motion-on');
+      window.scrollTo({ top: Math.max(0, y), behavior: calm ? 'auto' : 'smooth' });
+    }
+    function advance() {                                                       // a tap = "go on": overview -> first module -> next module ...
+      var to = stageIdx < 0 ? START + LEN * .5 : stageIdx < 5 ? START + (stageIdx + 1) * LEN + LEN * .5 : START + 6 * LEN + .2;
+      scene.pulse(); scrollToPs(to);
+    }
+
+    var down = null;
+    pin.addEventListener('pointerdown', function (e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) { down = null; return; }
+      down = { x: e.clientX, y: e.clientY, t: performance.now() };
+    });
+    pin.addEventListener('pointerup', function (e) {
+      var d = down; down = null;
+      if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 10 || performance.now() - d.t > 600) return;
+      if (e.target.closest && e.target.closest('a, button, .a3d-panel')) return;
+      advance();
+    });
+    pin.addEventListener('pointercancel', function () { down = null; });       // the browser took the gesture over to scroll
+
+    window.addEventListener('scroll', onScroll, { passive: true });
+    window.addEventListener('resize', function () { metrics(); onScroll(); });
+    window.addEventListener('load', function () { metrics(); onScroll(); });
+    metrics(); apply();
+
+    if (!('IntersectionObserver' in window)) { scene.setVisible(true); scene.start(); return; }
+    new IntersectionObserver(function (entries) {
+      var vis = entries[0].isIntersecting;
+      scene.setVisible(vis);
+      if (vis) { scene.start(); onScroll(); }
+    }, { rootMargin: '120px 0px', threshold: 0 }).observe(track);
   }
   if (doc.readyState === 'loading') doc.addEventListener('DOMContentLoaded', boot); else boot();
 })();
