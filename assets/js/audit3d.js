@@ -740,6 +740,15 @@
     /* scroll position -> story position `ps`, in units of one screen of the pinned stage:
          -0.25 .. 0.65   the six shapes assemble        1.0 + 0.8*i .. +0.8   stage i (0..5) is on stage       6.0   the stage lets go */
     var START = 1, LEN = .8, top = 0, ph = 1, stageIdx = -1, qd = 0;
+    /* Until the visitor taps, the stage is only one screen tall: scrolling simply carries on to the next page. The tap opens the pinned story. */
+    var GATE = '(min-width: 640px) and (min-height: 520px)', idle = mq(GATE), tap = null;
+    function setIdle(v) { idle = v; host.classList.toggle('a3d--idle', v); }
+    if (idle) {
+      setIdle(true);
+      tap = doc.createElement('button'); tap.type = 'button'; tap.className = 'sa-tap';
+      tap.innerHTML = '<i aria-hidden="true"></i><span>Tap the screen to explore</span>';
+      pin.appendChild(tap);
+    }
     function metrics() { top = parseFloat(getComputedStyle(pin).top) || 0; ph = pin.offsetHeight || 1; }
     function pickStage(ps, prev) {
       var raw = ps < START ? -1 : Math.min(5, Math.floor((ps - START) / LEN));
@@ -751,6 +760,7 @@
     function apply() {
       qd = 0;
       var ps = (top - track.getBoundingClientRect().top) / ph;
+      if (idle) { stageIdx = -1; scene.set({ want: -1, intro: clamp((ps + .8) / .4, 0, 1), ride: 0 }); ui.setWant(-1); return; }
       stageIdx = pickStage(ps, stageIdx);
       scene.set({ want: stageIdx, intro: clamp((ps + .25) / .9, 0, 1), ride: clamp(ps, 0, 1) });
       ui.setWant(stageIdx);
@@ -766,6 +776,9 @@
       scene.pulse(); scrollToPs(to);
     }
 
+    function activate() { if (!idle) return; setIdle(false); metrics(); apply(); advance(); }
+    if (tap) tap.addEventListener('click', function (e) { e.stopPropagation(); activate(); });
+
     var down = null;
     pin.addEventListener('pointerdown', function (e) {
       if (e.pointerType === 'mouse' && e.button !== 0) { down = null; return; }
@@ -775,12 +788,13 @@
       var d = down; down = null;
       if (!d || Math.hypot(e.clientX - d.x, e.clientY - d.y) > 10 || performance.now() - d.t > 600) return;
       if (e.target.closest && e.target.closest('a, button, .a3d-panel')) return;
+      if (idle) { activate(); return; }
       advance();
     });
     pin.addEventListener('pointercancel', function () { down = null; });       // the browser took the gesture over to scroll
 
     window.addEventListener('scroll', onScroll, { passive: true });
-    window.addEventListener('resize', function () { metrics(); onScroll(); });
+    window.addEventListener('resize', function () { if (idle && !mq(GATE)) setIdle(false); metrics(); onScroll(); });
     window.addEventListener('load', function () { metrics(); onScroll(); });
     metrics(); apply();
 

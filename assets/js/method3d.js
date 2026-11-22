@@ -201,6 +201,8 @@
         b.addEventListener('pointerenter', function () { if (api.onRailHover) api.onRailHover(k); });
         b.addEventListener('pointerleave', function () { if (api.onRailHover) api.onRailHover(-1); });
       });
+      api.tap = el('button', 'sa-tap', pin); api.tap.type = 'button'; el('i', '', api.tap).setAttribute('aria-hidden', 'true'); el('span', '', api.tap).textContent = 'Tap the screen to explore';
+      api.tap.addEventListener('click', function (e) { e.stopPropagation(); if (api.onTap) api.onTap(-1); });
       var hint = el('div', 'm3d-hint', pin); hint.setAttribute('aria-hidden', 'true'); hint.textContent = 'Scroll to travel through the five stages';
     }
     api.enable = function () {
@@ -208,11 +210,12 @@
       stepsEl.removeAttribute('tabindex'); stepsEl.setAttribute('aria-label', 'Audit process steps');
     };
     api.disable = function () {
-      sec.classList.remove('m3d--ready', 'm3d--tall', 'm3d-intro', 'm3d-fin', 'm3d-focus', 'm3d-formed', 'm3d-rail-on', 'm3d-has-shown');
+      sec.classList.remove('m3d--ready', 'm3d--tall', 'm3d-intro', 'm3d-fin', 'm3d-focus', 'm3d-formed', 'm3d-rail-on', 'm3d-has-shown', 'm3d-idle');
       steps.forEach(function (s) { s.classList.remove('is-shown'); });
       if (savedTab !== null) stepsEl.setAttribute('tabindex', savedTab);
       if (savedLabel !== null) stepsEl.setAttribute('aria-label', savedLabel);
     };
+    api.setIdle = function (v) { sec.classList.toggle('m3d-idle', v); };
     api.setTall = function (t) { sec.classList.toggle('m3d--tall', t); };
     api.setState = function (s) {
       var c = sec.classList;
@@ -244,7 +247,7 @@
     var lite = mq('(max-width: 899px)') || mq('(pointer: coarse)');
     var q = { dpr: Math.min(window.devicePixelRatio || 1, lite ? 1.5 : 2), slow: 0 };
     var st = { W: 2, H: 2, t: 0, last: 0, raf: 0, vis: false, lost: false, ps: -1, sp: -1, spS: -1, fresh: true, introS: 0, tall: false, hov: -1, railHov: -1,
-      ptr: { x: 0, y: 0, on: false }, px: 0, py: 0, ppx: 0, ppy: 0, key: '', scr: [], on: false, frames: 0 };
+      ptr: { x: 0, y: 0, on: false }, idle: false, px: 0, py: 0, ppx: 0, ppy: 0, key: '', scr: [], on: false, frames: 0 };
 
     /* ---------- GL state helpers ---------- */
     var enabled = [], MAXA = 8, qq;
@@ -456,7 +459,7 @@
     stage.addEventListener('pointerleave', function () { st.ptr.on = false; st.px = 0; st.py = 0; st.hov = -1; ui.pin.style.cursor = ''; });
     stage.addEventListener('click', function (e) {
       if (e.target.closest && e.target.closest('a, button')) return;
-      var p = local(e), k = pick(p[0], p[1]); if (k >= 0 && ui.onGoto) ui.onGoto(k);
+      var p = local(e), k = pick(p[0], p[1]); if (ui.onTap) ui.onTap(k);
     });
     canvas.addEventListener('webglcontextlost', function (ev) { ev.preventDefault(); st.lost = true; if (api.onLost) api.onLost(); });
 
@@ -470,7 +473,7 @@
       var t = st.t, ps = st.ps, W = st.W, H = st.H, k, i, p;
       if (st.fresh) { st.spS = st.sp; st.fresh = false; }
       st.spS += (st.sp - st.spS) * (1 - Math.exp(-dt * 5.5));
-      st.introS += (clamp((ps + .35) / .9, 0, 1) - st.introS) * (1 - Math.exp(-dt * 4));
+      st.introS += ((st.idle ? clamp((ps + .8) / .4, 0, 1) : clamp((ps + .35) / .9, 0, 1)) - st.introS) * (1 - Math.exp(-dt * 4));
       st.ppx += (st.px - st.ppx) * (1 - Math.exp(-dt * 3)); st.ppy += (st.py - st.ppy) * (1 - Math.exp(-dt * 3));
       var spS = st.spS, it = st.introS * 3.2, near = Math.round(spS), nd2 = Math.abs(spS - near);
       var f = easeInOut(clamp((spS + 1) / .8, 0, 1)) * (1 - easeInOut(clamp((spS - 4.2) / .8, 0, 1)));
@@ -617,6 +620,7 @@
       st: st, objs: objs, onLost: null,
       resize: resize,
       setScroll: function (ps, sp) { st.ps = ps; st.sp = sp; },
+      setIdle: function (v) { st.idle = v; },
       setHover: function (k) { st.railHov = k; },
       setVisible: function (v) { st.vis = v && !doc.hidden; if (st.vis && !st.raf && !st.lost) { st.last = performance.now(); st.raf = requestAnimationFrame(frame); } },
       halt: function () { st.vis = false; if (st.raf) { cancelAnimationFrame(st.raf); st.raf = 0; } }
@@ -631,12 +635,12 @@
     if (!sec) return;
     var ui = initUI(sec);
     if (!ui) return;
-    var scene = null, on = false, failed = false, top = 76, ph = 800, io = null, visible = true, qd = 0;
+    var scene = null, on = false, failed = false, idle = true, top = 76, ph = 800, io = null, visible = true, qd = 0;
     function reduced() { return mq(REDUCE) && !root.classList.contains('sa-motion-on'); }
     function metrics() { top = parseFloat(getComputedStyle(ui.pin).top) || 76; ph = ui.pin.offsetHeight || 1; }
     function apply() {
       qd = 0; if (!on || !scene) return;
-      var ps = (top - sec.getBoundingClientRect().top) / ph; scene.setScroll(ps, spOf(ps));
+      var ps = (top - sec.getBoundingClientRect().top) / ph; scene.setScroll(ps, idle ? -1 : spOf(ps));
     }
     function onScroll() { if (!qd) { qd = 1; requestAnimationFrame(apply); } }
     function goto(i) {
@@ -644,6 +648,8 @@
       var y = window.pageYOffset + sec.getBoundingClientRect().top + (START + i * STEP + TR + .22) * ph - top;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
+    function activate(k) { if (!idle) return false; idle = false; ui.setIdle(false); if (scene) scene.setIdle(false); metrics(); apply(); goto(k >= 0 ? k : 0); return true; }
+    ui.onTap = function (k) { if (!activate(k) && k >= 0) goto(k); };
     ui.onGoto = goto; ui.onRailHover = function (k) { if (scene) scene.setHover(k); };
     function fail() { failed = true; disable(); }
     function enable() {
@@ -658,6 +664,7 @@
         }
         if ('ResizeObserver' in window) new ResizeObserver(function () { if (on && scene) { metrics(); scene.resize(); apply(); } }).observe(ui.pin);
       }
+      ui.setIdle(idle); scene.setIdle(idle);
       on = true; metrics(); scene.resize(); apply(); scene.setVisible(visible);
     }
     function disable() { on = false; if (scene) scene.halt(); ui.disable(); }

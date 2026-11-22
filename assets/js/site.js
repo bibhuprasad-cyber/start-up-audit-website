@@ -87,9 +87,24 @@
   function initHeader() {
     var header = doc.querySelector('[data-header]');
     if (!header) return;
-    function update() { header.classList.toggle('is-scrolled', window.scrollY > 8); }
+    var home = doc.body.getAttribute('data-page') === 'home', hero = doc.getElementById('home-hero'), wide = window.matchMedia('(min-width: 640px)');
+    var burger = header.querySelector('.sa-burger');
+    /* Home: once the hero has mostly scrolled away the masthead dissolves into a three-bar button; back at the hero it returns in full. */
+    function dock() {
+      if (!home || !hero) return;
+      var docked = header.classList.contains('is-docked'), vh = window.innerHeight, b = hero.getBoundingClientRect().bottom;
+      var want = wide.matches && (docked ? b < vh * .72 : b < vh * .6);
+      if (want === docked) return;
+      header.classList.toggle('is-docked', want);
+      if (!want && burger && burger.getAttribute('aria-expanded') === 'true') burger.click();
+    }
+    function update() { header.classList.toggle('is-scrolled', window.scrollY > 8); dock(); }
     update();
     window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', dock, { passive: true });
+    if (home) doc.addEventListener('click', function (e) {
+      if (burger && burger.getAttribute('aria-expanded') === 'true' && header.classList.contains('is-docked') && !e.target.closest('[data-header]')) burger.click();
+    });
   }
 
   /* ---------- mobile navigation ---------- */

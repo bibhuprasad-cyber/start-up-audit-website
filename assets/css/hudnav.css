@@ -1,0 +1,91 @@
+/* Start-up Audit — Home only: HUD masthead that reads as one page with the hero, docks into a three-bar button after the hero,
+   and the "tap the screen" gate for the two pinned 3D stories (Inside the Business, the five-stage process).
+   Everything is scoped to screens at least 640px wide, so the phone layout is untouched. */
+
+.sa-tap { display: none; }
+
+@media (min-width: 640px) {
+  /* ---------- masthead: dark HUD glass over the hero ---------- */
+  html:has(body[data-page="home"]) { scroll-padding-top: 0; }
+  body[data-page="home"] main#main { padding-top: 0; }
+  body[data-page="home"] #home-hero > .relative { padding-top: var(--sa-header-h); min-height: calc(520px + var(--sa-header-h)); }
+
+  body[data-page="home"] .sa-header { background: rgba(33, 41, 43, .62); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
+    border-bottom: 1px solid rgba(229, 228, 226, .12); box-shadow: none;
+    transition: background-color .6s var(--sa-ease), border-color .6s var(--sa-ease), -webkit-backdrop-filter .6s, backdrop-filter .6s; }
+  body[data-page="home"] .sa-header.is-scrolled { box-shadow: none; }
+  body[data-page="home"] .sa-header::after { content: ""; position: absolute; left: 0; right: 0; bottom: -1px; height: 1px; pointer-events: none; opacity: 1; transition: opacity .6s ease;
+    background: linear-gradient(90deg, transparent, rgba(22, 179, 172, .75) 18%, rgba(22, 179, 172, .75) 82%, transparent); }
+  body[data-page="home"] .sa-brand { color: #fff; }
+  body[data-page="home"] .sa-tag { color: rgba(229, 228, 226, .55); border-left-color: rgba(229, 228, 226, .22); letter-spacing: .16em; }
+  body[data-page="home"] .sa-nav a { color: rgba(229, 228, 226, .84); letter-spacing: .14em; }
+  body[data-page="home"] .sa-nav a::after { background: #16b3ac; }
+  body[data-page="home"] .sa-nav a:hover, body[data-page="home"] .sa-nav a[aria-current="page"] { color: #5fd0c9; }
+  body[data-page="home"] .sa-cta { background: rgba(0, 128, 128, .9); border-color: #16b3ac; letter-spacing: .14em; }
+  body[data-page="home"] .sa-cta:hover, body[data-page="home"] .sa-cta[aria-current="page"] { background: #0a9a94; border-color: #5fd0c9; }
+  body[data-page="home"] .sa-brand, body[data-page="home"] .sa-tag, body[data-page="home"] .sa-nav, body[data-page="home"] .sa-cta {
+    transition: opacity .5s ease, transform .6s var(--sa-ease), visibility 0s, color .25s ease, background-color .25s ease, border-color .25s ease; }
+
+  /* docked: the bar dissolves and only a three-bar button is left */
+  body[data-page="home"] .sa-header.is-docked { background: transparent; border-bottom-color: transparent; -webkit-backdrop-filter: none; backdrop-filter: none; pointer-events: none; }
+  body[data-page="home"] .sa-header.is-docked::after { opacity: 0; }
+  body[data-page="home"] .sa-header.is-docked .sa-brand, body[data-page="home"] .sa-header.is-docked .sa-tag,
+  body[data-page="home"] .sa-header.is-docked .sa-nav, body[data-page="home"] .sa-header.is-docked .sa-cta {
+    opacity: 0; transform: translateY(-12px); visibility: hidden; pointer-events: none; transition: opacity .45s ease, transform .5s var(--sa-ease), visibility 0s .5s; }
+
+  /* the three-bar button */
+  body[data-page="home"] .sa-burger { display: inline-flex; position: absolute; top: 14px; right: clamp(16px, 3vw, 48px); margin: 0; width: 48px; height: 48px;
+    background: rgba(33, 41, 43, .74); border: 1px solid rgba(229, 228, 226, .3); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px);
+    opacity: 0; visibility: hidden; transform: translateY(-10px) scale(.92); pointer-events: none;
+    transition: opacity .45s ease, transform .6s var(--sa-ease), visibility 0s .6s, border-color .3s ease; }
+  body[data-page="home"] .sa-burger::before { content: ""; position: absolute; top: -1px; left: -1px; width: 9px; height: 9px; border: 1px solid #16b3ac; border-right: 0; border-bottom: 0; }
+  body[data-page="home"] .sa-burger::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 9px; height: 9px; border: 1px solid #16b3ac; border-left: 0; border-top: 0; }
+  body[data-page="home"] .sa-burger__bars i { background: #E5E4E2; }
+  body[data-page="home"] .sa-burger:hover { border-color: #16b3ac; }
+  body[data-page="home"] .sa-burger:hover i { background: #5fd0c9; }
+  body[data-page="home"] .sa-header.is-docked .sa-burger { opacity: 1; visibility: visible; transform: none; pointer-events: auto; transition-delay: .2s, .2s, 0s, 0s; }
+  @media (max-width: 899px) {                                       /* tablets: the burger is the menu, so it is always there */
+    body[data-page="home"] .sa-burger { opacity: 1; visibility: visible; transform: none; pointer-events: auto; transition-delay: 0s; }
+    body[data-page="home"] .sa-header__bar { padding-right: calc(clamp(16px, 3vw, 48px) + 60px); }
+  }
+
+  /* the menu opens as a HUD card */
+  body[data-page="home"] .sa-mobile { position: absolute; top: 70px; right: clamp(16px, 3vw, 48px); width: min(300px, calc(100vw - 32px)); max-height: none; overflow: visible;
+    padding: 8px 20px 20px; background: rgba(33, 41, 43, .92); -webkit-backdrop-filter: blur(16px); backdrop-filter: blur(16px);
+    border: 1px solid rgba(229, 228, 226, .18); border-left: 2px solid #16b3ac; flex-direction: column; pointer-events: auto; }
+  body[data-page="home"] .sa-mobile[hidden] { display: none; }
+  body[data-page="home"] .sa-mobile:not([hidden]) { display: flex; animation: saHudIn .5s var(--sa-ease) both; }
+  body[data-page="home"] .sa-mobile a { color: rgba(229, 228, 226, .9); border-bottom: 1px solid rgba(229, 228, 226, .1); padding: 16px 4px; min-height: 0; letter-spacing: .14em; }
+  body[data-page="home"] .sa-mobile a:hover, body[data-page="home"] .sa-mobile a[aria-current="page"] { color: #5fd0c9; }
+  body[data-page="home"] .sa-mobile .sa-mobile__cta { background: rgba(0, 128, 128, .92); color: #fff; border: 1px solid #16b3ac; margin-top: 16px; padding: 16px; justify-content: center; }
+  @keyframes saHudIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: none; } }
+}
+@media (min-width: 1024px) { body[data-page="home"] #home-hero > .relative { min-height: calc(720px + var(--sa-header-h)); } }
+
+/* ---------- the pinned stories reach the top of the screen (the masthead is docked by then) ---------- */
+@media (min-width: 640px) and (min-height: 520px) {
+  .a3d { --a3d-top: 0px; }
+  #process { --m3d-top: 0px; }
+
+  /* idle: one screen tall, so a scroll simply carries on to the next page. A tap opens the pinned story. */
+  .a3d--ready.a3d--idle .a3d-track { height: var(--a3d-ph); }
+  #process.m3d--ready.m3d-idle { height: var(--m3d-ph); }
+  .a3d--ready.a3d--idle .a3d-hint, .a3d--ready.a3d--idle .a3d-rail,
+  #process.m3d--ready.m3d-idle .m3d-hint, #process.m3d--ready.m3d-idle .m3d-rail { display: none; }
+  .a3d--ready.a3d--idle .a3d-pin, #process.m3d--ready.m3d-idle > div:first-of-type { cursor: pointer; }
+
+  .sa-tap { display: inline-flex; position: absolute; z-index: 6; top: 22px; left: 50%; transform: translate(-50%, -10px); align-items: center; gap: 12px; padding: 13px 22px 13px 18px;
+    border: 1px solid rgba(22, 179, 172, .6); background: rgba(33, 41, 43, .74); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); color: #fff; cursor: pointer;
+    font: 600 11px/1 "Inter", "SA Body", system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase; white-space: nowrap;
+    opacity: 0; visibility: hidden; pointer-events: none;
+    transition: opacity .6s ease, transform .8s var(--sa-ease), visibility 0s .8s, background-color .3s ease, border-color .3s ease; }
+  .sa-tap::before, .sa-tap::after { content: ""; position: absolute; width: 8px; height: 8px; border: 1px solid #5fd0c9; }
+  .sa-tap::before { top: -1px; left: -1px; border-right: 0; border-bottom: 0; }
+  .sa-tap::after { right: -1px; bottom: -1px; border-left: 0; border-top: 0; }
+  .sa-tap i { width: 9px; height: 9px; border-radius: 50%; background: #5fd0c9; box-shadow: 0 0 0 0 rgba(95, 208, 201, .55); animation: saTapPulse 1.9s ease-out infinite; }
+  .sa-tap:hover, .sa-tap:focus-visible { background: rgba(0, 128, 128, .8); border-color: #5fd0c9; outline: none; }
+  .a3d--ready.a3d--idle .sa-tap, #process.m3d--ready.m3d-idle .sa-tap { opacity: 1; visibility: visible; pointer-events: auto; transform: translate(-50%, 0);
+    transition: opacity .7s ease .45s, transform .9s var(--sa-ease) .45s, visibility 0s, background-color .3s ease, border-color .3s ease; }
+  @keyframes saTapPulse { 0% { box-shadow: 0 0 0 0 rgba(95, 208, 201, .55); } 75%, 100% { box-shadow: 0 0 0 11px rgba(95, 208, 201, 0); } }
+}
+@media (prefers-reduced-motion: reduce) { .sa-tap i { animation: none; } body[data-page="home"] .sa-mobile:not([hidden]) { animation: none; } }
