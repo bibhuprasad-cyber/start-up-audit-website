@@ -1,0 +1,53 @@
+/* Start-up Audit — Home, the rest of the page in the same HUD language: Selected Case Studies, the closing call to action and the footer.
+   Colours and frames only: every word, link and stock photo stays. Screens under 640px keep their current layout. */
+@media (min-width: 640px) {
+  /* ---------- Selected Case Studies ---------- */
+  body[data-page="home"] #case-studies { position: relative; border-bottom: 0; color: #E5E4E2;
+    background: radial-gradient(ellipse 55% 45% at 82% 6%, rgba(0, 128, 128, .26), transparent 70%), radial-gradient(ellipse 50% 40% at 6% 96%, rgba(0, 128, 128, .14), transparent 70%), #293133; }
+  body[data-page="home"] #case-studies::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(22, 179, 172, .7) 20%, rgba(22, 179, 172, .7) 80%, transparent); }
+  body[data-page="home"] #case-studies .text-primary, body[data-page="home"] #case-studies .text-primary.font-semibold { color: #5fd0c9; }
+  body[data-page="home"] #case-studies .text-on-surface { color: #fff; }
+  body[data-page="home"] #case-studies .text-on-surface-variant { color: #cfd6d7; }
+  body[data-page="home"] #case-studies .text-outline { color: #9fb0b2; }
+  body[data-page="home"] #case-studies a.text-on-surface:hover, body[data-page="home"] #case-studies a.hover\:text-primary:hover { color: #5fd0c9; }
+  body[data-page="home"] #case-studies a.hover\:text-on-surface:hover { color: #fff; }
+  body[data-page="home"] #case-studies [class*="border-outline-variant"], body[data-page="home"] #case-studies .border-surface-variant { border-color: rgba(229, 228, 226, .16); }
+  body[data-page="home"] #case-studies h2 { letter-spacing: -.02em; }
+
+  /* the case files become dark glass panels with a teal edge and HUD corner ticks */
+  body[data-page="home"] #case-studies .bg-surface-container-lowest { position: relative; background: rgba(33, 41, 43, .74); border: 1px solid rgba(229, 228, 226, .16); border-left: 2px solid #16b3ac;
+    box-shadow: 0 30px 60px -40px rgba(0, 0, 0, .7); transition: border-color .4s ease, box-shadow .5s ease, transform .6s var(--sa-ease); }
+  body[data-page="home"] #case-studies .bg-surface-container-lowest:hover { border-color: rgba(22, 179, 172, .5); border-left-color: #5fd0c9; box-shadow: 0 30px 60px -36px rgba(0, 128, 128, .5); }
+  body[data-page="home"] #case-studies .bg-surface-container-lowest::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 16px; height: 16px; z-index: 3; pointer-events: none;
+    border-right: 1px solid #5fd0c9; border-bottom: 1px solid #5fd0c9; }
+  body[data-page="home"] #case-studies .bg-surface-container, body[data-page="home"] #case-studies .bg-surface-container-low { background: rgba(255, 255, 255, .04); }
+  body[data-page="home"] #case-studies .bg-surface-container-low.inline-block { background: rgba(0, 128, 128, .16); border: 1px solid rgba(22, 179, 172, .4); color: #cfeeea; }
+  body[data-page="home"] #case-studies .bg-surface-container-low .text-on-surface-variant { color: #cfd6d7; }
+  body[data-page="home"] #case-studies .bg-inverse-surface { background: rgba(33, 41, 43, .86); border: 1px solid rgba(95, 208, 201, .5); color: #5fd0c9; letter-spacing: .18em; }
+  /* photos stay exactly as they are; they just sit in a HUD frame */
+  body[data-page="home"] #case-studies [data-img-reveal] { background: #1f2729; }
+  body[data-page="home"] #case-studies [data-img-reveal]::before { content: ""; position: absolute; left: 10px; top: 10px; width: 18px; height: 18px; z-index: 4; pointer-events: none;
+    border-left: 1px solid rgba(229, 228, 226, .75); border-top: 1px solid rgba(229, 228, 226, .75); }
+  body[data-page="home"] #case-studies [data-img-reveal]::after { content: ""; position: absolute; right: 10px; bottom: 10px; width: 18px; height: 18px; z-index: 4; pointer-events: none;
+    border-right: 1px solid rgba(229, 228, 226, .75); border-bottom: 1px solid rgba(229, 228, 226, .75); }
+
+  /* ---------- closing call to action ---------- */
+  body[data-page="home"] #home-cta { background: radial-gradient(ellipse 60% 90% at 78% 50%, rgba(0, 128, 128, .5), transparent 70%), linear-gradient(180deg, #293133, #1f282a); border-top: 1px solid rgba(22, 179, 172, .45); }
+  body[data-page="home"] #home-cta::before { content: ""; position: absolute; left: 24px; top: 24px; width: 22px; height: 22px; border-left: 1px solid rgba(229, 228, 226, .4); border-top: 1px solid rgba(229, 228, 226, .4); }
+  body[data-page="home"] #home-cta::after { content: ""; position: absolute; right: 24px; bottom: 24px; width: 22px; height: 22px; border-right: 1px solid rgba(229, 228, 226, .4); border-bottom: 1px solid rgba(229, 228, 226, .4); }
+  body[data-page="home"] #home-cta .bg-on-primary { background: #16b3ac; }
+  body[data-page="home"] #home-cta .text-on-primary-container, body[data-page="home"] #home-cta .text-on-primary-container\/90 { color: #5fd0c9; }
+  body[data-page="home"] #home-cta p.text-on-primary-container\/90 { color: #cfd6d7; }
+  body[data-page="home"] #home-cta a.bg-inverse-surface { background: #008080; color: #fff; border: 1px solid #16b3ac; box-shadow: 0 0 0 0 rgba(22, 179, 172, .4); transition: background-color .3s ease, box-shadow .4s ease; }
+  body[data-page="home"] #home-cta a.bg-inverse-surface:hover { background: #0a9a94; box-shadow: 0 0 28px -4px rgba(22, 179, 172, .7); }
+  body[data-page="home"] #home-cta a.border { border-color: rgba(229, 228, 226, .4); color: #fff; }
+  body[data-page="home"] #home-cta a.border:hover { border-color: #5fd0c9; background: rgba(95, 208, 201, .1); }
+
+  /* ---------- footer ---------- */
+  body[data-page="home"] .sa-footer { position: relative; background: #1b2224; border-top: 1px solid rgba(22, 179, 172, .45); }
+  body[data-page="home"] .sa-footer__grid { border-bottom-color: rgba(229, 228, 226, .14); }
+  body[data-page="home"] .sa-footer__h { color: #5fd0c9; letter-spacing: .18em; border-bottom-color: rgba(22, 179, 172, .35); }
+  body[data-page="home"] .sa-footer__label { color: #9fb0b2; letter-spacing: .16em; }
+  body[data-page="home"] .sa-footer a:hover { color: #5fd0c9; }
+}
