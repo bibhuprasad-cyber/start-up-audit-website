@@ -19,7 +19,7 @@
   body[data-page="home"] #case-studies .bg-surface-container-lowest { position: relative; background: rgba(33, 41, 43, .74); border: 1px solid rgba(229, 228, 226, .16); border-left: 2px solid #16b3ac;
     box-shadow: 0 30px 60px -40px rgba(0, 0, 0, .7); transition: border-color .4s ease, box-shadow .5s ease, transform .6s var(--sa-ease); }
   body[data-page="home"] #case-studies .bg-surface-container-lowest:hover { border-color: rgba(22, 179, 172, .5); border-left-color: #5fd0c9; box-shadow: 0 30px 60px -36px rgba(0, 128, 128, .5); }
-  body[data-page="home"] #case-studies .bg-surface-container-lowest::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 16px; height: 16px; z-index: 3; pointer-events: none;
+  body[data-page="home"] #case-studies .bg-surface-container-lowest::after { content: ""; position: absolute; right: 0; bottom: 0; width: 16px; height: 16px; z-index: 3; pointer-events: none;
     border-right: 1px solid #5fd0c9; border-bottom: 1px solid #5fd0c9; }
   body[data-page="home"] #case-studies .bg-surface-container, body[data-page="home"] #case-studies .bg-surface-container-low { background: rgba(255, 255, 255, .04); }
   body[data-page="home"] #case-studies .bg-surface-container-low.inline-block { background: rgba(0, 128, 128, .16); border: 1px solid rgba(22, 179, 172, .4); color: #cfeeea; }

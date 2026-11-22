@@ -45,7 +45,7 @@
     position: relative; background-color: rgba(33, 41, 43, .74); box-shadow: 0 28px 60px -42px rgba(0, 0, 0, .75); }
   body[data-hud="site"] .bg-surface-container-lowest.border:not(section), body[data-hud="site"] .sa-cs-card { border: 1px solid rgba(229, 228, 226, .16); border-left: 2px solid #16b3ac; }
   body[data-hud="site"] .bg-surface-container-lowest:not(section):not(input):not(textarea):not(select)::after, body[data-hud="site"] .sa-cs-card::after {
-    content: ""; position: absolute; right: -1px; bottom: -1px; width: 14px; height: 14px; z-index: 3; pointer-events: none; border-right: 1px solid #5fd0c9; border-bottom: 1px solid #5fd0c9; }
+    content: ""; position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; z-index: 3; pointer-events: none; border-right: 1px solid #5fd0c9; border-bottom: 1px solid #5fd0c9; }
   body[data-hud="site"] .bg-surface-container:not(section), body[data-hud="site"] .bg-surface-container-low, body[data-hud="site"] .bg-\[\#E5E4E2\]:not(section) { background-color: rgba(255, 255, 255, .05); }
   body[data-hud="site"] .bg-surface-container-low.inline-block, body[data-hud="site"] .sa-cs-flow--chips span { background: rgba(0, 128, 128, .16); border: 1px solid rgba(22, 179, 172, .4); color: #cfeeea; }
   body[data-hud="site"] .sp-stages li { border-color: rgba(229, 228, 226, .16); } body[data-hud="site"] .sp-stages li.is-hot { background: rgba(0, 128, 128, .75); border-color: #16b3ac; }
@@ -82,7 +82,7 @@
   /* ---- Audit Scope boxes, Madhuram price ladder ---- */
   body[data-hud="site"] .sa-scope-box, body[data-hud="site"] .sa-price li { position: relative; background: rgba(33, 41, 43, .74); border: 1px solid rgba(229, 228, 226, .16); border-left: 2px solid #16b3ac; box-shadow: 0 28px 60px -42px rgba(0, 0, 0, .75); color: #cfd6d7; }
   body[data-hud="site"] .sa-price li { border-top: 3px solid rgba(229, 228, 226, .3); } body[data-hud="site"] .sa-price li.sa-price__end { border-top-color: #16b3ac; }
-  body[data-hud="site"] .sa-scope-box::after, body[data-hud="site"] .sa-price li::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 14px; height: 14px; pointer-events: none; border-right: 1px solid #5fd0c9; border-bottom: 1px solid #5fd0c9; }
+  body[data-hud="site"] .sa-scope-box::after, body[data-hud="site"] .sa-price li::after { content: ""; position: absolute; right: 0; bottom: 0; width: 14px; height: 14px; pointer-events: none; border-right: 1px solid #5fd0c9; border-bottom: 1px solid #5fd0c9; }
   body[data-hud="site"] .sa-scope-box--no li::before { background: #9fb0b2; } body[data-hud="site"] .sa-scope-box li::before { background: #16b3ac; }
   body[data-hud="site"] .sa-scope-box--no li::before { background: #9fb0b2; }
   body[data-hud="site"] .sa-price__lab { color: #9fb0b2; } body[data-hud="site"] .sa-price__v { color: #fff; } body[data-hud="site"] .sa-price__end .sa-price__v { color: #5fd0c9; } body[data-hud="site"] .sa-price p { color: #cfd6d7; }
