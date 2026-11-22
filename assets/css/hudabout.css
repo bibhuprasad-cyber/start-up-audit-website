@@ -1,0 +1,48 @@
+/* Start-up Audit — About, in the HUD style of the home page: dark teal glass, teal lines, corner ticks. Words, links and photos are unchanged.
+   Screens under 640px keep their current layout. */
+@media (min-width: 640px) {
+  body[data-page="about"] { background: #293133; color: #E5E4E2; }
+  body[data-page="about"] main#main, body[data-page="about"] .bg-platinum { background-color: transparent; }
+  body[data-page="about"] section { position: relative; border-color: rgba(229, 228, 226, .12); }
+  body[data-page="about"] section.bg-platinum { background: radial-gradient(ellipse 55% 50% at 88% 0%, rgba(0, 128, 128, .22), transparent 70%), #293133; }
+  body[data-page="about"] section.bg-platinum-light { background: radial-gradient(ellipse 55% 50% at 6% 100%, rgba(0, 128, 128, .18), transparent 70%), #252d2f; }
+  body[data-page="about"] section.bg-charcoal { background: radial-gradient(ellipse 60% 60% at 50% 0%, rgba(0, 128, 128, .2), transparent 70%), #1d2527; }
+  body[data-page="about"] section + section::before { content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; pointer-events: none;
+    background: linear-gradient(90deg, transparent, rgba(22, 179, 172, .6) 20%, rgba(22, 179, 172, .6) 80%, transparent); }
+
+  /* type colours */
+  body[data-page="about"] .text-charcoal, body[data-page="about"] .text-white { color: #fff; }
+  body[data-page="about"] .text-charcoal-soft { color: #d3d9da; }
+  body[data-page="about"] .text-charcoal-muted { color: #aab5b7; }
+  body[data-page="about"] .text-platinum-dim, body[data-page="about"] .text-platinum { color: #cfd6d7; }
+  body[data-page="about"] .text-teal-accent { color: #5fd0c9; }
+  body[data-page="about"] a.hover\:text-teal-accent:hover, body[data-page="about"] .hover\:text-teal-accent:hover { color: #8be9e0; }
+  body[data-page="about"] .hover\:text-white:hover { color: #fff; }
+
+  /* lines */
+  body[data-page="about"] .border-border-hairline, body[data-page="about"] .divide-border-hairline > * + * { border-color: rgba(229, 228, 226, .16); }
+  body[data-page="about"] .border-border-charcoal, body[data-page="about"] [class*="border-border-charcoal/"], body[data-page="about"] .border-white\/10 { border-color: rgba(229, 228, 226, .16); }
+  body[data-page="about"] .border-teal-accent { border-color: #16b3ac; }
+
+  /* panels: dark glass with a teal edge and a corner tick */
+  body[data-page="about"] .bg-platinum-card, body[data-page="about"] .bg-charcoal-card { position: relative; background-color: rgba(33, 41, 43, .74); box-shadow: 0 28px 60px -42px rgba(0, 0, 0, .75);
+    -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px); transition: border-color .4s ease, box-shadow .5s ease; }
+  body[data-page="about"] .bg-platinum-card.border, body[data-page="about"] .bg-charcoal-card.border { border-color: rgba(229, 228, 226, .16); border-left: 2px solid #16b3ac; }
+  body[data-page="about"] .bg-platinum-card:hover, body[data-page="about"] .bg-charcoal-card:hover { border-color: rgba(22, 179, 172, .5); box-shadow: 0 28px 60px -38px rgba(0, 128, 128, .5); }
+  body[data-page="about"] .bg-platinum-card::after, body[data-page="about"] .bg-charcoal-card::after { content: ""; position: absolute; right: -1px; bottom: -1px; width: 14px; height: 14px; z-index: 3; pointer-events: none;
+    border-right: 1px solid #5fd0c9; border-bottom: 1px solid #5fd0c9; }
+  body[data-page="about"] .shadow-sm, body[data-page="about"] .shadow-md { box-shadow: 0 28px 60px -42px rgba(0, 0, 0, .75); }
+
+  /* photos stay as they are, inside HUD frames */
+  body[data-page="about"] [data-img-reveal] { position: relative; }
+  body[data-page="about"] [data-img-reveal]::before { content: ""; position: absolute; left: 10px; top: 10px; width: 18px; height: 18px; z-index: 4; pointer-events: none;
+    border-left: 1px solid rgba(229, 228, 226, .8); border-top: 1px solid rgba(229, 228, 226, .8); }
+  body[data-page="about"] [data-img-reveal]::after { content: ""; position: absolute; right: 10px; bottom: 10px; width: 18px; height: 18px; z-index: 4; pointer-events: none;
+    border-right: 1px solid rgba(229, 228, 226, .8); border-bottom: 1px solid rgba(229, 228, 226, .8); }
+
+  /* buttons */
+  body[data-page="about"] a.bg-teal-accent { border: 1px solid #16b3ac; transition: background-color .3s ease, box-shadow .4s ease; }
+  body[data-page="about"] a.bg-teal-accent:hover, body[data-page="about"] a.hover\:bg-teal-accent-hover:hover { background-color: #0a9a94; box-shadow: 0 0 28px -4px rgba(22, 179, 172, .7); }
+  body[data-page="about"] a.hover\:bg-charcoal-dark:hover { background-color: #0a9a94; }
+  body[data-page="about"] ::selection { background: #008080; color: #fff; }
+}

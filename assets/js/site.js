@@ -87,7 +87,7 @@
   function initHeader() {
     var header = doc.querySelector('[data-header]');
     if (!header) return;
-    var home = doc.body.getAttribute('data-page') === 'home', hero = doc.getElementById('home-hero'), wide = window.matchMedia('(min-width: 640px)');
+    var home = doc.body.hasAttribute('data-hud'), hero = doc.getElementById('home-hero') || doc.querySelector('main section'), wide = window.matchMedia('(min-width: 640px)');
     var burger = header.querySelector('.sa-burger');
     /* Home: once the hero has mostly scrolled away the masthead dissolves into a three-bar button; back at the hero it returns in full. */
     function dock() {
