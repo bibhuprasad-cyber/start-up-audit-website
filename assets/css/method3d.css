@@ -1,0 +1,150 @@
+/* Start-up Audit — Home "A Process Built Around Your Business": a cinematic 3D journey through the five stages (works with assets/js/method3d.js).
+
+   Everything below is scoped to  #process.m3d--ready , a class the script adds ONLY on screens at least 640px wide and 520px tall, when WebGL
+   works and the visitor has not asked for reduced motion. Phones, no-JavaScript, no-WebGL and reduced-motion visitors therefore keep the original
+   section (markup and phone rules in site.css) exactly as it was. The words on screen are the section's own text: the script only restyles it. */
+
+@media (min-width: 640px) and (min-height: 520px) {
+  #process { --m3d-top: var(--sa-header-h, 76px); --m3d-ph: max(calc(100vh - var(--m3d-top)), 520px); --m3d-gut: clamp(24px, 5vw, 80px); }
+  @supports (height: 100svh) { #process { --m3d-ph: max(calc(100svh - var(--m3d-top)), 520px); } }
+
+  /* ---------- the section is the scroll track, its container is the pinned stage ---------- */
+  #process.m3d--ready { position: relative; height: calc(var(--m3d-ph) * 7.6); padding: 0; background: #293133; border: 0; }
+  #process.m3d--ready > div:first-of-type { position: sticky; top: var(--m3d-top); height: var(--m3d-ph); max-width: none; margin: 0; padding: 0; overflow: hidden; isolation: isolate; background: #293133; touch-action: pan-y; }
+  #process.m3d--ready > div:first-of-type::before, #process.m3d--ready > div:first-of-type::after { content: ""; position: absolute; z-index: 5; width: 22px; height: 22px; border: 1px solid rgba(229, 228, 226, .34); pointer-events: none; }
+  #process.m3d--ready > div:first-of-type::before { top: 16px; left: 16px; border-right: 0; border-bottom: 0; }
+  #process.m3d--ready > div:first-of-type::after { right: 16px; bottom: 16px; border-left: 0; border-top: 0; }
+
+  /* the teal glow behind the subject (same palette as the hero and the audit dimensions); it follows the subject from the right of the screen to the left */
+  #process.m3d--ready .m3d-glow { display: block; position: absolute; inset: -12% -22%; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse 30% 42% at 50% 52%, rgba(52, 96, 95, .95) 0%, rgba(45, 69, 71, .6) 42%, rgba(41, 49, 51, 0) 100%);
+    transform: translate3d(12%, 0, 0); transition: transform 1.7s cubic-bezier(.2, .7, .2, 1); }
+  #process.m3d--ready.m3d-focus .m3d-glow { transform: translate3d(-13%, 0, 0); }
+  #process.m3d--ready .m3d-canvas { display: block; position: absolute; inset: 0; z-index: 1; width: 100%; height: 100%; opacity: 0; transition: opacity 1.2s ease; }
+  #process.m3d--ready .m3d-canvas.is-on { opacity: 1; }
+
+  /* ---------- heading (the section's own header) ---------- */
+  #process.m3d--ready .m3d-title { position: absolute; z-index: 3; left: var(--m3d-gut); top: 50%; max-width: min(560px, 40vw); margin: 0; transform: translateY(calc(-50% + 26px)); opacity: 0; filter: blur(5px); pointer-events: none;
+    transition: opacity .8s ease, transform 1s cubic-bezier(.2, .7, .2, 1), filter .8s ease; }
+  #process.m3d--ready.m3d-intro .m3d-title { transform: translateY(-50%); opacity: 1; filter: none; pointer-events: auto; }
+  #process.m3d--ready .m3d-title > div:first-child { margin-bottom: 18px; }
+  #process.m3d--ready .m3d-title > div:first-child > span:first-child { background: #16b3ac; box-shadow: 0 0 10px #16b3ac; }
+  #process.m3d--ready .m3d-title > div:first-child > span:last-child { color: #5fd0c9; }
+  #process.m3d--ready .m3d-title h2 { margin: 0 0 18px; font-size: clamp(34px, 4.2vw, 64px); line-height: 1.04; letter-spacing: -.02em; color: #fff; }
+  #process.m3d--ready .m3d-title p { margin: 0; max-width: 470px; font-size: clamp(15px, 1.2vw, 18px); line-height: 1.65; color: #cfd6d7; }
+
+  /* ---------- closing sentence + link: shown when the camera pulls back over the finished path ---------- */
+  #process.m3d--ready .m3d-outro { position: absolute; z-index: 4; left: var(--m3d-gut); top: 50%; width: min(500px, 40vw); max-width: none; margin: 0; transform: translateY(calc(-50% + 26px)); opacity: 0; filter: blur(4px); pointer-events: none;
+    transition: opacity .8s ease, transform 1s cubic-bezier(.2, .7, .2, 1), filter .8s ease; }
+  #process.m3d--ready.m3d-fin .m3d-outro, #process.m3d--ready .m3d-outro:focus-within { transform: translateY(-50%); opacity: 1; filter: none; pointer-events: auto; }
+  #process.m3d--ready .m3d-outro p { margin: 0; padding: 22px 26px 24px; border-left: 2px solid #16b3ac; border-top: 1px solid rgba(229, 228, 226, .18); border-bottom: 1px solid rgba(229, 228, 226, .18);
+    background: linear-gradient(100deg, rgba(41, 49, 51, .8), rgba(41, 49, 51, .45)); -webkit-backdrop-filter: blur(9px); backdrop-filter: blur(9px);
+    font-size: clamp(15px, 1.25vw, 18px); line-height: 1.7; color: #d3d8d9; }
+  #process.m3d--ready .m3d-outro a { color: #5fd0c9; text-decoration-color: rgba(95, 208, 201, .6); }
+  #process.m3d--ready .m3d-outro a:hover { color: #fff; }
+  #process.m3d--ready .m3d-outro a:focus-visible { outline: 2px solid #5fd0c9; outline-offset: 4px; }
+
+  /* ---------- HUD furniture ---------- */
+  #process.m3d--ready .m3d-hud { display: flex; align-items: center; gap: 9px; position: absolute; z-index: 5; top: 20px; left: calc(var(--m3d-gut) - 8px); pointer-events: none; padding-left: 14px;
+    font: 600 10.5px/1.4 Inter, "SA Body", system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: rgba(229, 228, 226, .7); }
+  .m3d-hud b { color: #fff; font-weight: 700; }
+  .m3d-hud i, .m3d-lbl i { font-style: normal; opacity: .5; padding: 0 3px; }
+  .m3d-hud-f, #process.m3d--ready.m3d-focus .m3d-hud-o { display: none; }
+  #process.m3d--ready.m3d-focus .m3d-hud-f { display: inline; }
+  .m3d-dot { width: 7px; height: 7px; background: #16b3ac; display: inline-block; box-shadow: 0 0 10px #16b3ac; animation: m3dPulse 2.4s ease-in-out infinite; }
+  @keyframes m3dPulse { 0%, 100% { opacity: .45; } 50% { opacity: 1; } }
+
+  /* floating tags over the stations (overview, and whichever station the pointer is on) */
+  #process.m3d--ready .m3d-labels { display: block; position: absolute; inset: 0; z-index: 3; pointer-events: none; }
+  #process.m3d--ready .m3d-lbl { position: absolute; left: 0; top: 0; display: flex; align-items: center; gap: 8px; padding: 6px 11px 6px 9px; white-space: nowrap; will-change: transform; opacity: 0;
+    background: rgba(41, 49, 51, .82); border: 1px solid rgba(22, 179, 172, .3); border-left: 2px solid #16b3ac;
+    font: 700 10px/1 Inter, "SA Body", system-ui, sans-serif; letter-spacing: .14em; text-transform: uppercase; color: rgba(255, 255, 255, .9);
+    transition: opacity .5s ease, background-color .25s ease, border-color .25s ease; }
+  .m3d-lbl b { color: #5fd0c9; letter-spacing: .08em; font-weight: 700; }
+  #process.m3d--ready .m3d-lbl.is-on { opacity: 1; }
+  #process.m3d--ready .m3d-lbl.is-hover { background: rgba(0, 128, 128, .65); border-color: #16b3ac; }
+
+  /* progress rail: five stages, each one a button that travels there */
+  #process.m3d--ready .m3d-rail { display: flex; gap: clamp(14px, 3vw, 40px); position: absolute; z-index: 6; left: 50%; bottom: 22px; transform: translateX(-50%); opacity: 0; transition: opacity .6s ease; pointer-events: none; }
+  #process.m3d--ready.m3d-rail-on .m3d-rail { opacity: 1; pointer-events: auto; }
+  .m3d-tick { position: relative; display: flex; align-items: center; gap: 8px; min-height: 36px; padding: 8px 2px 10px; background: none; border: 0; cursor: pointer; color: rgba(229, 228, 226, .55);
+    font: 700 10px/1.2 Inter, "SA Body", system-ui, sans-serif; letter-spacing: .16em; text-transform: uppercase; transition: color .3s ease; }
+  .m3d-tick b { color: rgba(95, 208, 201, .75); letter-spacing: .08em; transition: color .3s ease; }
+  .m3d-tick::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: rgba(229, 228, 226, .2); transition: background-color .4s ease, box-shadow .4s ease; }
+  .m3d-tick:hover, .m3d-tick.is-hover { color: #fff; }
+  .m3d-tick.done::after { background: rgba(22, 179, 172, .75); }
+  .m3d-tick.cur { color: #fff; }
+  .m3d-tick.cur b { color: #fff; }
+  .m3d-tick.cur::after { background: #fff; box-shadow: 0 0 10px #16b3ac; }
+  .m3d-tick:focus-visible { outline: 2px solid #5fd0c9; outline-offset: 2px; }
+
+  #process.m3d--ready .m3d-hint { display: block; position: absolute; z-index: 5; left: 50%; bottom: 66px; transform: translateX(-50%); width: max-content; max-width: calc(100% - 40px); text-align: center; pointer-events: none; opacity: 0; transition: opacity .7s ease;
+    font: 600 10.5px/1.5 Inter, "SA Body", system-ui, sans-serif; letter-spacing: .2em; text-transform: uppercase; color: rgba(229, 228, 226, .74); }
+  #process.m3d--ready.m3d-intro.m3d-formed .m3d-hint { opacity: 1; }
+  .m3d-hint::after { content: "\2193"; margin-left: 10px; color: #5fd0c9; display: inline-block; animation: m3dNudge 1.6s ease-in-out infinite; }
+  @keyframes m3dNudge { 0%, 100% { transform: translateY(-2px); opacity: .6; } 50% { transform: translateY(3px); opacity: 1; } }
+
+  /* ---------- the five stages, set as HUD panels on the right (the section's own number, title and description) ---------- */
+  #process.m3d--ready .m3d-track { position: absolute; z-index: 4; top: 50%; right: var(--m3d-gut); width: min(500px, 40vw); margin: 0; transform: translateY(-50%); pointer-events: none; }
+  #process.m3d--ready .m3d-track > .sa-draw { display: none; }
+  #process.m3d--ready .m3d-steps { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; margin: 0; padding: 0; overflow: visible; scroll-snap-type: none; counter-reset: m3d; }
+  #process.m3d--ready .m3d-step { grid-area: 1 / 1; align-self: center; counter-increment: m3d; position: relative; isolation: isolate; width: auto; margin: 0; padding: 30px 34px 34px; animation: none; opacity: 0; transform: translateX(34px);
+    transition: opacity .28s ease, transform .35s ease; }
+  #process.m3d--ready .m3d-step.is-shown { opacity: 1; transform: none; transition: opacity .6s ease, transform .85s cubic-bezier(.2, .7, .2, 1); }
+  #process.m3d--ready .m3d-step::before { content: ""; position: absolute; inset: 0; z-index: -1; border-left: 2px solid #16b3ac; border-top: 1px solid rgba(229, 228, 226, .18); border-bottom: 1px solid rgba(229, 228, 226, .18);
+    background: linear-gradient(180deg, rgba(22, 179, 172, 0), rgba(22, 179, 172, .22) 50%, rgba(22, 179, 172, 0)) 0 -100px / 100% 90px no-repeat, linear-gradient(100deg, rgba(41, 49, 51, .8) 0%, rgba(41, 49, 51, .5) 100%);
+    -webkit-backdrop-filter: blur(9px); backdrop-filter: blur(9px); }
+  #process.m3d--ready .m3d-step::after { content: ""; position: absolute; inset: -1px; z-index: -1; pointer-events: none; opacity: .6;
+    background: linear-gradient(#E5E4E2, #E5E4E2) top right / 20px 1px no-repeat, linear-gradient(#E5E4E2, #E5E4E2) top right / 1px 20px no-repeat,
+      linear-gradient(#E5E4E2, #E5E4E2) bottom right / 20px 1px no-repeat, linear-gradient(#E5E4E2, #E5E4E2) bottom right / 1px 20px no-repeat; }
+  #process.m3d--ready .m3d-step.is-shown::before { animation: m3dScan 1.5s .25s ease-out both; }
+  @keyframes m3dScan { from { background-position: 0 -100px, 0 0; } to { background-position: 0 calc(100% + 100px), 0 0; } }
+  #process.m3d--ready .m3d-step.is-shown > div:first-child { animation: m3dLine .6s .08s cubic-bezier(.2, .7, .2, 1) both; }
+  #process.m3d--ready .m3d-step.is-shown h3 { animation: m3dLine .6s .28s cubic-bezier(.2, .7, .2, 1) both; }
+  #process.m3d--ready .m3d-step.is-shown p { animation: m3dLine .6s .38s cubic-bezier(.2, .7, .2, 1) both; }
+  @keyframes m3dLine { from { opacity: 0; transform: translateX(22px); } to { opacity: 1; transform: none; } }
+
+  /* number row: "STAGE 01 OF 05" tag, then the big outlined numeral */
+  #process.m3d--ready .m3d-step > div:first-child { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0; margin: 0 0 12px; }
+  #process.m3d--ready .m3d-step > div:first-child::before { content: "STAGE " counter(m3d, decimal-leading-zero) " OF 05"; flex: 0 0 100%; margin-bottom: 14px; padding-bottom: 12px; border-bottom: 1px solid rgba(229, 228, 226, .16);
+    font: 700 10px/1.5 Inter, "SA Body", system-ui, sans-serif; letter-spacing: .18em; color: #5fd0c9; }
+  #process.m3d--ready .m3d-step > div:first-child > div:first-child { width: auto; height: auto; padding: 0; border: 0; background: transparent; box-shadow: none; display: block;
+    font: 700 64px/1 Manrope, "SA Heading", Inter, system-ui, sans-serif; color: rgba(22, 179, 172, .1); -webkit-text-stroke: 1.4px #16b3ac; text-shadow: 0 0 26px rgba(22, 179, 172, .45); }
+  #process.m3d--ready .m3d-step > div:first-child > div:last-child { display: none; }
+  #process.m3d--ready .m3d-step > div:last-child { padding: 0; border: 0; }
+  #process.m3d--ready .m3d-step h3 { margin: 0 0 14px; font-size: clamp(28px, 2.7vw, 40px); line-height: 1.1; letter-spacing: -.015em; color: #fff; }
+  #process.m3d--ready .m3d-step h3::after { content: ""; display: block; width: 52px; height: 2px; margin-top: 15px; background: #16b3ac; }
+  #process.m3d--ready .m3d-step p { margin: 0; font-size: 16px; line-height: 1.7; color: #d3d8d9; }
+
+  /* a thin line from the panel back to the station on the left */
+  #process.m3d--ready .m3d-track::before { content: ""; position: absolute; top: 50%; right: 100%; width: clamp(48px, 9vw, 170px); height: 1px; background: linear-gradient(90deg, rgba(22, 179, 172, 0), rgba(22, 179, 172, .95)); transform: scaleX(0); transform-origin: 100% 50%; transition: transform .4s ease; }
+  #process.m3d--ready .m3d-track::after { content: ""; position: absolute; top: calc(50% - 3px); right: calc(100% - 3px); width: 7px; height: 7px; background: #16b3ac; box-shadow: 0 0 12px #16b3ac; opacity: 0; transition: opacity .3s ease; }
+  #process.m3d--ready.m3d-has-shown .m3d-track::before { transform: scaleX(1); transition: transform .9s .25s cubic-bezier(.2, .7, .2, 1); }
+  #process.m3d--ready.m3d-has-shown .m3d-track::after { opacity: 1; transition: opacity .5s .9s ease; }
+
+  /* short laptop screens: a little tighter so each panel always fits */
+  @media (max-height: 760px) {
+    #process.m3d--ready .m3d-step { padding: 22px 28px 26px; }
+    #process.m3d--ready .m3d-step > div:first-child > div:first-child { font-size: 50px; }
+    #process.m3d--ready .m3d-step p { font-size: 15px; line-height: 1.6; }
+  }
+
+  /* ---------- narrow / portrait screens (tablets): the station sits at the top, its text below ---------- */
+  #process.m3d--ready.m3d--tall .m3d-glow { transform: translate3d(0, 14%, 0); }
+  #process.m3d--ready.m3d--tall.m3d-focus .m3d-glow { transform: translate3d(0, -16%, 0); }
+  #process.m3d--ready.m3d--tall .m3d-title, #process.m3d--ready.m3d--tall .m3d-outro { top: 56px; left: 28px; right: 28px; width: auto; max-width: none; transform: translateY(26px); }
+  #process.m3d--ready.m3d--tall.m3d-intro .m3d-title, #process.m3d--ready.m3d--tall.m3d-fin .m3d-outro, #process.m3d--ready.m3d--tall .m3d-outro:focus-within { transform: none; }
+  #process.m3d--ready.m3d--tall .m3d-title p { max-width: 560px; }
+  #process.m3d--ready.m3d--tall .m3d-hud { top: 18px; left: 20px; }
+  #process.m3d--ready.m3d--tall .m3d-track { top: auto; bottom: 74px; left: 22px; right: 22px; width: auto; transform: none; }
+  #process.m3d--ready.m3d--tall .m3d-track::before, #process.m3d--ready.m3d--tall .m3d-track::after { display: none; }
+  #process.m3d--ready.m3d--tall .m3d-step { padding: 20px 22px 22px; transform: translateY(26px); }
+  #process.m3d--ready.m3d--tall .m3d-step.is-shown { transform: none; }
+  #process.m3d--ready.m3d--tall .m3d-step > div:first-child > div:first-child { font-size: 44px; }
+  #process.m3d--ready.m3d--tall .m3d-step h3 { font-size: 26px; }
+  #process.m3d--ready.m3d--tall .m3d-step p { font-size: 15px; }
+  #process.m3d--ready.m3d--tall .m3d-outro { top: auto; bottom: 84px; }
+  #process.m3d--ready.m3d--tall .m3d-tick span { display: none; }
+  #process.m3d--ready.m3d--tall .m3d-tick { padding-inline: 8px; }
+  #process.m3d--ready.m3d--tall .m3d-hint { bottom: 70px; }
+}
