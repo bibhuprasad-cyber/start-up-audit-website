@@ -4,6 +4,7 @@
    Add ?3ddebug to the URL to see a small status box (renderer, canvas size, errors). */
 (function () {
   'use strict';
+  function sfx(n) { try { window.dispatchEvent(new CustomEvent('sa:sfx', { detail: n })); } catch (e) {} }   // sound hook only; nothing visual
 
   var doc = document, root = doc.documentElement;
   var mq = function (q) { return window.matchMedia ? window.matchMedia(q).matches : false; };
@@ -453,6 +454,7 @@
         nd.flash = scanOn ? Math.exp(-Math.pow(dyScan / 0.5, 2)) : 0;
         nd.aud = scanOn ? smooth(-0.2, 0.9, dyScan) : afterScan;
         nd.hover = hover;
+        if ((hover > 0.6) !== !!nd.hon) { nd.hon = hover > 0.6; if (nd.hon) sfx('hover'); }
       }
 
       /* ---------- scan plane (additive) ---------- */

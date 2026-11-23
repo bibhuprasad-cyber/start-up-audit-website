@@ -9,6 +9,7 @@
    the audit dimensions) with no libraries, so it adds no download beyond this file. ?3ddebug in the address shows a small status box. */
 (function () {
   'use strict';
+  function sfx(n) { try { window.dispatchEvent(new CustomEvent('sa:sfx', { detail: n })); } catch (e) {} }   // sound hook only; nothing visual
 
   var doc = document, root = doc.documentElement;
   var mq = function (q) { return window.matchMedia ? window.matchMedia(q).matches : false; };
@@ -497,6 +498,7 @@
 
       /* stations: appear one after another, grow when the camera is on them, answer the pointer */
       var order = [], pk = (st.ptr.on && !st.tall) ? pick(st.ptr.x, st.ptr.y) : -1;
+      if (pk !== st.lastHov) { if (pk >= 0) sfx('hover'); st.lastHov = pk; }
       st.hov = pk; ui.pin.style.cursor = pk >= 0 ? 'pointer' : '';
       for (k = 0; k < N; k++) {
         var o = objs[k], ap = easeBack(clamp((it - .3 - k * .3) / 1, 0, 1)), act = 1 - clamp(Math.abs(spS - k), 0, 1), hovNow = (st.hov === k || st.railHov === k) ? 1 : 0;
@@ -518,7 +520,7 @@
       var shown = (spS > -.5 && spS < 4.5 && nd2 < .13) ? near : -1;
       var s = { cur: (spS > -.45 && spS < 4.45) ? clamp(near, 0, 4) : -1, shown: shown, intro: spS < -.8, fin: spS > 4.85, focus: f > .5, formed: st.introS > .97, rail: st.introS > .6, done: spS > 4.45 };
       var key = [s.cur, s.shown, +s.intro, +s.fin, +s.focus, +s.formed, +s.rail, +s.done].join();
-      if (key !== st.key) { st.key = key; ui.setState(s); }
+      if (key !== st.key) { st.key = key; ui.setState(s); if (s.cur !== st.lastCur) { if (s.cur >= 0) sfx('whoosh'); st.lastCur = s.cur; } }
       ui.tickHover(st.hov >= 0 ? st.hov : st.railHov);
       for (k = 0; k < N; k++) {
         var sc = st.scr[k], showL = (1 - f > .5 && objs[k].al > .5) || st.hov === k || st.railHov === k;
@@ -648,7 +650,7 @@
       var y = window.pageYOffset + sec.getBoundingClientRect().top + (START + i * STEP + TR + .22) * ph - top;
       window.scrollTo({ top: y, behavior: 'smooth' });
     }
-    function activate(k) { if (!idle) return false; idle = false; ui.setIdle(false); if (scene) scene.setIdle(false); metrics(); apply(); goto(k >= 0 ? k : 0); return true; }
+    function activate(k) { if (!idle) return false; sfx('engage'); idle = false; ui.setIdle(false); if (scene) scene.setIdle(false); metrics(); apply(); goto(k >= 0 ? k : 0); return true; }
     ui.onTap = function (k) { if (!activate(k) && k >= 0) goto(k); };
     ui.onGoto = goto; ui.onRailHover = function (k) { if (scene) scene.setHover(k); };
     function fail() { failed = true; disable(); }

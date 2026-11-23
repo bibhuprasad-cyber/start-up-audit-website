@@ -8,6 +8,7 @@
    Add ?3ddebug to the URL to log renderer info and quality changes to the console. */
 (function () {
   'use strict';
+  function sfx(n) { try { window.dispatchEvent(new CustomEvent('sa:sfx', { detail: n })); } catch (e) {} }   // sound hook only; nothing visual
 
   var doc = document, root = doc.documentElement;
   var mq = function (q) { return window.matchMedia ? window.matchMedia(q).matches : false; };
@@ -438,7 +439,7 @@
     /* ---------- pointer: a light parallax and a hover highlight on the overview (the scroll drives everything else) ---------- */
     function setHover(i) {
       if (i === st.hov) return;
-      st.hov = i; lbls.forEach(function (l, k) { l.classList.toggle('is-hover', k === i); }); st.dirty = true;
+      st.hov = i; if (i >= 0) sfx('hover'); lbls.forEach(function (l, k) { l.classList.toggle('is-hover', k === i); }); st.dirty = true;
     }
     function hitTest(px, py) {
       var best = -1, bz = 1e9, k;
@@ -739,7 +740,7 @@
 
     /* scroll position -> story position `ps`, in units of one screen of the pinned stage:
          -0.25 .. 0.65   the six shapes assemble        1.0 + 0.8*i .. +0.8   stage i (0..5) is on stage       6.0   the stage lets go */
-    var START = 1, LEN = .8, top = 0, ph = 1, stageIdx = -1, qd = 0;
+    var START = 1, LEN = .8, top = 0, ph = 1, stageIdx = -1, lastIdx = -1, qd = 0;
     /* Until the visitor taps, the stage is only one screen tall: scrolling simply carries on to the next page. The tap opens the pinned story. */
     var GATE = '(min-width: 640px) and (min-height: 520px)', idle = mq(GATE), tap = null;
     function setIdle(v) { idle = v; host.classList.toggle('a3d--idle', v); }
@@ -762,6 +763,7 @@
       var ps = (top - track.getBoundingClientRect().top) / ph;
       if (idle) { stageIdx = -1; scene.set({ want: -1, intro: clamp((ps + .8) / .4, 0, 1), ride: 0 }); ui.setWant(-1); return; }
       stageIdx = pickStage(ps, stageIdx);
+      if (stageIdx !== lastIdx) { if (stageIdx >= 0) sfx('select'); lastIdx = stageIdx; }
       scene.set({ want: stageIdx, intro: clamp((ps + .25) / .9, 0, 1), ride: clamp(ps, 0, 1) });
       ui.setWant(stageIdx);
     }
@@ -776,7 +778,7 @@
       scene.pulse(); scrollToPs(to);
     }
 
-    function activate() { if (!idle) return; setIdle(false); metrics(); apply(); advance(); }
+    function activate() { if (!idle) return; sfx('engage'); setIdle(false); metrics(); apply(); advance(); }
     if (tap) tap.addEventListener('click', function (e) { e.stopPropagation(); activate(); });
 
     var down = null;
