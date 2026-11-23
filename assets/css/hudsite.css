@@ -1,6 +1,6 @@
 /* Start-up Audit — every inner page (Case Studies and its case files, Audit Scope, Book an Audit, Policies, 404) in the HUD style of the home page:
-   dark teal glass, teal lines, corner ticks. Words, links and photos are unchanged. Screens under 640px keep their current layout. */
-@media (min-width: 640px) {
+   dark teal glass, teal lines, corner ticks. Words, links and photos are unchanged. Phones get the same colours and frames; sizes, spacing and text are untouched. */
+@media all {
   body[data-hud="site"] { background: #293133; color: #E5E4E2; }
   body[data-hud="site"] main#main { background: transparent; }
   body[data-hud="site"] section { position: relative; border-color: rgba(229, 228, 226, .12); }
@@ -55,7 +55,7 @@
   body[data-hud="site"] .sa-cs-chain__n { background: #008080; } body[data-hud="site"] .sa-cs-base { background: rgba(33, 41, 43, .74); border: 1px solid rgba(229, 228, 226, .16); }
   body[data-hud="site"] .sa-cs-flow:not(.sa-cs-flow--chips) span:not(:last-child)::after { color: #5fd0c9; } body[data-hud="site"] .sa-cs-flow--loop span { background: #006b6b; }
   body[data-hud="site"] .sa-cs-path { border-top-color: rgba(229, 228, 226, .3); } body[data-hud="site"] .sa-cs-path--b { border-top-color: #16b3ac; }
-  body[data-hud="site"] .bg-inverse-surface:not(a):not(section) { background: rgba(33, 41, 43, .86); border: 1px solid rgba(95, 208, 201, .5); color: #5fd0c9; letter-spacing: .16em; }
+  body[data-hud="site"] .bg-inverse-surface:not(a):not(section) { background: rgba(33, 41, 43, .86); border: 1px solid rgba(95, 208, 201, .5); color: #5fd0c9; }
   body[data-hud="site"] .bg-on-primary { background: #16b3ac; }
 
   /* ---- photos stay as they are, inside HUD frames ---- */
@@ -90,4 +90,25 @@
   body[data-hud="site"] .sa-road li { color: #cfd6d7; } body[data-hud="site"] .sa-road li strong { color: #fff; } body[data-hud="site"] .sa-road__n { color: #5fd0c9; }
   body[data-hud="site"] .sa-road li::before { background: #293133; border-color: #16b3ac; } body[data-hud="site"] .sa-road__price em { background: #006b6b !important; }
   body[data-hud="site"] .sa-road__start::before, body[data-hud="site"] .sa-road__price::before { background: #16b3ac !important; }
+}
+@media (min-width: 640px) {
+  body[data-hud="site"] .bg-inverse-surface:not(a):not(section) { letter-spacing: .16em; }
+}
+@media (max-width: 639px) {
+  body[data-hud="site"] .bg-surface-container-lowest.border:not(section), body[data-hud="site"] .sa-cs-card, body[data-hud="site"] .sa-scope-box, body[data-hud="site"] .sa-price li { border-left-width: 1px; border-left-color: #16b3ac; }
+}
+/* phones: frames that the HUD adds are drawn inside the box (inset shadow), so no size changes */
+@media (max-width: 639px) {
+  body[data-hud="site"] .sa-cs-card:not(.sa-cs-path), body[data-hud="site"] .sa-cs-base,
+  body[data-hud="site"] .bg-surface-container-low.inline-block, body[data-hud="site"] .sa-cs-flow--chips span, body[data-hud="site"] .bg-inverse-surface:not(a):not(section),
+  body[data-hud="site"] a.bg-inverse-surface, body[data-hud="site"] button.bg-inverse-surface, body[data-hud="site"] a.bg-primary, body[data-hud="site"] button.bg-primary, body[data-hud="site"] button[type="submit"] { border-width: 0; }
+  body[data-hud="site"] .sa-cs-card:not(.sa-cs-path) { box-shadow: inset 0 0 0 1px rgba(229, 228, 226, .16), inset 2px 0 0 #16b3ac, 0 28px 60px -42px rgba(0, 0, 0, .75); }
+  body[data-hud="site"] .sa-cs-base { box-shadow: inset 0 0 0 1px rgba(229, 228, 226, .16); }
+  body[data-hud="site"] .bg-surface-container-low.inline-block, body[data-hud="site"] .sa-cs-flow--chips span { box-shadow: inset 0 0 0 1px rgba(22, 179, 172, .4); }
+  body[data-hud="site"] .bg-inverse-surface:not(a):not(section) { box-shadow: inset 0 0 0 1px rgba(95, 208, 201, .5); }
+  body[data-hud="site"] a.bg-inverse-surface, body[data-hud="site"] button.bg-inverse-surface, body[data-hud="site"] a.bg-primary, body[data-hud="site"] button.bg-primary, body[data-hud="site"] button[type="submit"] { box-shadow: inset 0 0 0 1px #16b3ac; }
+}
+@media (max-width: 639px) {
+  body[data-hud="site"] .sa-cs-card.sa-cs-path { border-left-width: 0; border-right-width: 0; border-bottom-width: 0;
+    box-shadow: inset 0 0 0 1px rgba(229, 228, 226, .16), inset 2px 0 0 #16b3ac, 0 28px 60px -42px rgba(0, 0, 0, .75); }
 }

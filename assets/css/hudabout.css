@@ -1,6 +1,6 @@
 /* Start-up Audit — About, in the HUD style of the home page: dark teal glass, teal lines, corner ticks. Words, links and photos are unchanged.
-   Screens under 640px keep their current layout. */
-@media (min-width: 640px) {
+   Phones get the same colours and frames; sizes, spacing and text are untouched. */
+@media all {
   body[data-page="about"] { background: #293133; color: #E5E4E2; }
   body[data-page="about"] main#main, body[data-page="about"] .bg-platinum { background-color: transparent; }
   body[data-page="about"] section { position: relative; border-color: rgba(229, 228, 226, .12); }
@@ -46,3 +46,8 @@
   body[data-page="about"] a.hover\:bg-charcoal-dark:hover { background-color: #0a9a94; }
   body[data-page="about"] ::selection { background: #008080; color: #fff; }
 }
+@media (min-width: 640px) {
+  
+}
+@media (max-width: 639px) { body[data-page="about"] .bg-platinum-card.border, body[data-page="about"] .bg-charcoal-card.border { border-left-width: 1px; border-left-color: #16b3ac; } }
+@media (max-width: 639px) { body[data-page="about"] a.bg-teal-accent { border-width: 0; box-shadow: inset 0 0 0 1px #16b3ac; } }
