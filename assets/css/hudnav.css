@@ -105,6 +105,10 @@
 
 /* ---------- phones: the same HUD colours on the masthead and the menu; size, position and text stay exactly as they were ---------- */
 @media (max-width: 639px) {
+  :root { --sa-header-h: 54px; }
+  body[data-hud] .sa-header__bar { height: 54px; }
+  body[data-hud] main#main:not(.sp-main) { padding-top: 54px; }
+  body[data-hud] .sa-burger { width: 38px; height: 38px; }
   body[data-hud] .sa-header { background: rgba(33, 41, 43, .86); -webkit-backdrop-filter: blur(14px) saturate(1.2); backdrop-filter: blur(14px) saturate(1.2);
     border-bottom: 1px solid rgba(229, 228, 226, .12); box-shadow: none; }
   body[data-hud] .sa-header.is-scrolled { box-shadow: none; }
