@@ -732,6 +732,7 @@
     if (!host) return;
     var track = host.querySelector('.a3d-track'), pin = host.querySelector('.a3d-pin');
     if (!track || !pin) return;
+    if (!mq('(min-width: 640px) and (min-height: 520px)')) return;
     var ui = initUI(host), scene = null;
     try { scene = initGL(host, ui); } catch (e) { scene = null; if (DEBUG) console.warn('[audit3d]', e); }
     if (!scene) { host.classList.add('a3d--no3d'); return; }                 // plain stacked cards

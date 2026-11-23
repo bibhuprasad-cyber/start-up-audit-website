@@ -172,3 +172,11 @@
 @media (prefers-reduced-motion: reduce) {
   html:not(.sa-motion-on) .a3d *, html:not(.sa-motion-on) .a3d *::before, html:not(.sa-motion-on) .a3d *::after { animation: none !important; transition: none !important; }
 }
+
+/* Phones (and short landscape screens): original editorial section, no 3D. */
+.sa-edit { display: none; }
+@media (max-width: 639px), (max-height: 519px) {
+  #services.a3d-section { background: #E5E4E2; border-bottom: 1px solid rgba(41,49,51,.2); }
+  #services > .a3d { display: none !important; }
+  #services > .sa-edit { display: block; }
+}
