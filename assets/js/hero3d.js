@@ -167,14 +167,14 @@
       gl = canvas.getContext('webgl', { alpha: true, antialias: true, depth: true, stencil: false, premultipliedAlpha: true }) ||
         canvas.getContext('experimental-webgl');
     } catch (e) { gl = null; }
-    if (!gl) return;
+    if (!gl) { root.classList.remove('sa-h3d'); return; }
 
     var SOLID, LINE, SPR;
     try {
       SOLID = makeProgram(gl, SOLID_VS, SOLID_FS, ['uVP', 'uM', 'uN', 'uColor', 'uCam', 'uLight', 'uAlpha', 'uEmis', 'uFog'], ['aPos', 'aNor']);
       LINE = makeProgram(gl, LINE_VS, LINE_FS, ['uVP', 'uM', 'uCol', 'uFogC', 'uFogR'], ['aPos']);
       SPR = makeProgram(gl, SPR_VS, SPR_FS, ['uVP', 'uRight', 'uUp'], ['aPos', 'aCor', 'aSize', 'aCol']);
-    } catch (e) { return; }
+    } catch (e) { root.classList.remove('sa-h3d'); return; }
 
     wrap.appendChild(canvas);
 
@@ -313,7 +313,7 @@
       dbg.textContent = '[3d] ' + msg + '\ncanvas ' + canvas.width + 'x' + canvas.height + ' css ' + Math.round(cssW) + 'x' + Math.round(cssH) + ' frames ' + frames + ' tier ' + (small ? 'mobile' : 'desktop') + '\n' + info;
     }
     function fail(msg) {
-      failed = true; on = false; running = false;
+      failed = true; on = false; running = false; root.classList.remove('sa-h3d');
       try { if (window.console) console.warn('[sa3d] fallback to photo: ' + msg); } catch (e) {}
       wrap.classList.remove('sa-hero3d-wrap'); canvas.classList.remove('is-on'); canvas.style.display = 'none';
       report('FALLBACK: ' + msg);
@@ -601,7 +601,7 @@
         report('OK, drawing');
       }
       if (firstFrame) {
-        firstFrame = false; canvas.classList.add('is-on'); wrap.classList.add('sa-hero3d-wrap');
+        firstFrame = false; canvas.classList.add('is-on'); wrap.classList.add('sa-hero3d-wrap'); root.setAttribute('data-h3d', '1');
         window.setTimeout(function () { canvas.classList.add('is-live'); live = true; }, 1600);
       }
       if (!still) { running = true; window.requestAnimationFrame(frame); }
