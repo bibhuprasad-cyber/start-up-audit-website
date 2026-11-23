@@ -117,17 +117,3 @@
   @keyframes saEq { 0%, 100% { height: 3px; } 50% { height: 12px; } }
 }
 @media (prefers-reduced-motion: reduce) { .sa-sound.is-on .sa-sound__eq i { animation: none; height: 8px; } }
-
-/* phones: the same control as a small icon-only badge (an overlay, no layout change) */
-@media (max-width: 639px) {
-  .sa-sound { position: fixed; left: 12px; bottom: 12px; z-index: 45; display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; padding: 0; cursor: pointer;
-    background: rgba(33, 41, 43, .8); -webkit-backdrop-filter: blur(10px); backdrop-filter: blur(10px); border: 1px solid rgba(229, 228, 226, .3);
-    opacity: 0; transition: opacity .7s ease, border-color .3s ease; }
-  .sa-sound.is-in { opacity: 1; }
-  .sa-sound .sa-sound__t, .sa-sound .sa-sound__s { display: none; }
-  .sa-sound__eq { display: inline-flex; align-items: flex-end; gap: 2px; height: 14px; }
-  .sa-sound__eq i { display: block; width: 2px; height: 3px; background: #6b7678; }
-  .sa-sound.is-on { border-color: #16b3ac; } .sa-sound.is-on .sa-sound__eq i { background: #5fd0c9; animation: saEq 1.1s ease-in-out infinite; }
-  .sa-sound.is-on .sa-sound__eq i:nth-child(2) { animation-delay: -.3s; } .sa-sound.is-on .sa-sound__eq i:nth-child(3) { animation-delay: -.6s; } .sa-sound.is-on .sa-sound__eq i:nth-child(4) { animation-delay: -.9s; }
-  @keyframes saEq { 0%, 100% { height: 3px; } 50% { height: 14px; } }
-}

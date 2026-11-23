@@ -12,6 +12,7 @@
   var doc = document, KEY = 'sa-sfx';
   var AC = window.AudioContext || window.webkitAudioContext;
   if (!AC) return;
+  if (window.matchMedia && window.matchMedia('(max-width: 639px)').matches) return;       // no sound, and no sound button, on phones
 
   var on = false;
   try { on = window.sessionStorage.getItem(KEY) === 'on'; } catch (e) {}
