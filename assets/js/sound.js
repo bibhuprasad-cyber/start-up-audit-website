@@ -17,7 +17,7 @@
   function setup() {
     if (ctx) return true;
     try { ctx = new AC(); } catch (e) { ctx = null; return false; }
-    master = ctx.createGain(); master.gain.value = .9;
+    master = ctx.createGain(); master.gain.value = 1;
     var comp = ctx.createDynamicsCompressor(); master.connect(comp); comp.connect(ctx.destination);
     var n = ctx.sampleRate * 2, b = ctx.createBuffer(1, n, ctx.sampleRate), d = b.getChannelData(0);
     for (var i = 0; i < n; i++) d[i] = Math.random() * 2 - 1;
@@ -36,13 +36,13 @@
   }
   function landing() {
     var t = ctx.currentTime + .03;
-    tone(t, 46, 98, 1.7, .11);                                   // low swell
-    whoosh(t, 1.6, .06, 260, 2600);                              // air rising
-    tone(t + .95, 659.25, 659.25, 1.9, .045); tone(t + 1.04, 987.77, 987.77, 1.8, .035); tone(t + 1.16, 1318.5, 1318.5, 1.7, .025);   // teal chord
+    tone(t, 70, 150, 1.7, .26); tone(t, 140, 300, 1.7, .1, 'triangle');          // low swell (kept above 60 Hz so small speakers can play it)
+    whoosh(t, 1.6, .2, 260, 2600);                                               // air rising
+    tone(t + .95, 659.25, 659.25, 1.9, .16); tone(t + 1.04, 987.77, 987.77, 1.8, .12); tone(t + 1.16, 1318.5, 1318.5, 1.7, .09);   // teal chord
   }
   function activate() {
     var t = ctx.currentTime + .02;
-    whoosh(t, .7, .05, 400, 3200); tone(t, 220, 440, .5, .06, 'triangle'); tone(t + .06, 1174.7, 1174.7, .7, .04);
+    whoosh(t, .7, .16, 400, 3200); tone(t, 220, 440, .5, .2, 'triangle'); tone(t + .06, 1174.7, 1174.7, .7, .14);
   }
   function ready(fn) {
     if (!on || !setup()) return;
